@@ -36,3 +36,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/.idea/misc.xml
+/.idea/shelf/random_idea_files_and_Expression_class.xml
+/.idea/shelf/random_idea_files_and_Expression_class/shelved.patch
+/.idea/uiDesigner.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
