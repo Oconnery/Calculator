@@ -35,7 +35,7 @@ public class Computer {
 
     private String performArithmeticEvaluations(String expression){
         String postExponentExpression = evaluateOperations(expression, new Exponent()); // these new() methods will be done multiple times for parentheses
-        String postDivisionMultiplicationExpression = evaluateOperations(postExponentExpression, new Divison(), new Multiplication());
+        String postDivisionMultiplicationExpression = evaluateOperations(postExponentExpression, new Division(), new Multiplication());
         return evaluateOperations(postDivisionMultiplicationExpression, new Addition(), new Subtraction());
     }
 
@@ -44,7 +44,7 @@ public class Computer {
         int expressionLength = expression.length();
         for (int i=1; i<expressionLength; i++){
             if (expression.charAt(i) == arithmeticOperator.getSymbol()){
-                String newExpression = arithmeticOperator.evaluateOperator(expression, expressionLength, i);
+                String newExpression = arithmeticOperator.evaluateOperator(expression, i);
                 return evaluateOperations(newExpression, arithmeticOperator);
             }
         }
@@ -58,10 +58,10 @@ public class Computer {
         int expressionLength = expression.length();
         for (int i=1; i<expressionLength; i++){
             if (expression.charAt(i) == arithmeticOperatorOne.getSymbol()){
-                String newExpression = arithmeticOperatorOne.evaluateOperator(expression, expressionLength, i);
+                String newExpression = arithmeticOperatorOne.evaluateOperator(expression, i);
                 return evaluateOperations(newExpression, arithmeticOperatorOne, arithmeticOperatorTwo);
             } else if (expression.charAt(i) == arithmeticOperatorTwo.getSymbol()) {
-                String newExpression = arithmeticOperatorTwo.evaluateOperator(expression, expressionLength, i);
+                String newExpression = arithmeticOperatorTwo.evaluateOperator(expression, i);
                 return evaluateOperations(newExpression, arithmeticOperatorOne, arithmeticOperatorTwo);
             }
         }

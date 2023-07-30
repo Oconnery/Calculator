@@ -1,5 +1,7 @@
 package oisin.connery.operators;
 
+import java.math.BigDecimal;
+
 public class Exponent extends ArithmeticOperator {
 
     public Exponent() {
@@ -7,7 +9,12 @@ public class Exponent extends ArithmeticOperator {
     }
 
     @Override
-    int calculate(int leftNumber, int rightNumber) {
-        return (int) Math.pow(leftNumber, rightNumber);
+    BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber) { // should be int or Integer?
+        // todo: implementation
+        return leftNumber.pow(rightNumber.intValue());
+    }
+
+    BigDecimal calculate(BigDecimal leftNumber, int rightNumber){
+        return leftNumber.pow(rightNumber);
     }
 }

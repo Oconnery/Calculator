@@ -1,5 +1,7 @@
 package oisin.connery.operators;
 
+import java.math.BigDecimal;
+
 public class Multiplication extends ArithmeticOperator{
 
     public Multiplication() {
@@ -7,7 +9,7 @@ public class Multiplication extends ArithmeticOperator{
     }
 
     @Override
-    int calculate(int leftNumber, int rightNumber) {
-        return Math.multiplyExact(leftNumber, rightNumber);
+    BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber) {
+        return leftNumber.multiply(rightNumber);
     }
 }

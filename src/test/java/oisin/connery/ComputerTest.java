@@ -50,8 +50,14 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
 
 
     @ParameterizedTest
-    @MethodSource({"provideParenthesesGoodInput"})
+    @MethodSource({"provideParenthesesInput"})
     public void testCalculateReturnsCorrectAnswerOnParenthesesInput(String formula, String expectedOutput){
+        assertComputerCalculatesOutputFromFormula(formula, expectedOutput);
+    }
+
+    @ParameterizedTest
+    @MethodSource({"provideDecimalsInput"})
+    public void testCalculateReturnsCorrectAnswerOnDecimalsInput(String formula, String expectedOutput){
         assertComputerCalculatesOutputFromFormula(formula, expectedOutput);
     }
 
@@ -81,7 +87,7 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
                 Arguments.of("100000 - 99999", "1"),
                 Arguments.of("1000000 - 999999", "1"),
                 Arguments.of("10000000 - 9999999", "1"),
-                Arguments.of("100000000 - 99999999", "1"), // approaching Integer max?
+                Arguments.of("100000000 - 99999999", "1"),
                 Arguments.of("2147483647 - 2147483646", "1"),
                 Arguments.of("2147483647 - 2147483647", "0"),
                 Arguments.of("2147483647 - 0", "2147483647"));
@@ -105,7 +111,8 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
                 Arguments.of("1 ^ 0", "1"),
                 Arguments.of("0 ^ 0", "1"),
                 Arguments.of("0 ^ 2147483647", "0"),
-                Arguments.of("2147483647 ^ 0", "1"),
+                Arguments.of("999999999 ^ 0", "1"),
+                Arguments.of("2147483647 ^ 0", "1"), // doesnt work now because max value is 999999999. I could always try catch arithmeticException in the exponent implementation and try math.pow after converting to primitives
                 Arguments.of("0 ^ 0", "1"),
                 Arguments.of("4 ^ 4 ^ 2", "65536"),
                 Arguments.of("1 ^ 1 ^ 1 ^ 1 ^ 1 ^ 1 ^ 1", "1"),
@@ -122,7 +129,7 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
                 Arguments.of("10 - 3 ^ 2", "1"));
     }
 
-    private static Stream<Arguments> provideParenthesesGoodInput(){
+    private static Stream<Arguments> provideParenthesesInput(){
         return Stream.of(
                 Arguments.of("(4 + 1)", "5"),
                 Arguments.of("(3 - 2)", "1"),
@@ -146,10 +153,10 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
                 Arguments.of("(7 * 7) * (4 * 5)", "980"),
                 Arguments.of("(7 * 7) * (4 * 5)", "980"),
 
-                Arguments.of("(7 * 7) / (4 * 5)", "2"), // or 3 .. I'm not doing decimals yet.
-                Arguments.of("(7 * 7) / (4 * 5)", "2"),
-                Arguments.of("(7 * 7) / (4 * 5)", "2"),
-                Arguments.of("(7 * 7) / (4 * 5)", "2"),
+                Arguments.of("(7 * 7) / (4 * 5)", "2.45"),
+                Arguments.of("(7 * 7) / (4 * 5)", "2.45"),
+                Arguments.of("(7 * 7) / (4 * 5)", "2.45"),
+                Arguments.of("(7 * 7) / (4 * 5)", "2.45"),
 
                 Arguments.of("(3 * 3) ^ (4 * 1)", "6561"),
                 Arguments.of("(3 * 3) ^ (4 * 1)", "6561"),
@@ -161,7 +168,17 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
 
     private static Stream<Arguments> provideDecimalsInput(){
         return Stream.of(
-                Arguments.of("4 ^ 2", "16"));
+                Arguments.of("1.0 + 1.0", "2.0"), // To save performance of using bigDecimals I could use double up until the max point for each operation.
+                Arguments.of("4.0 - 2.0", "2.0"),
+                Arguments.of("2 * 3.0", "6.0"),
+                Arguments.of("8.0 / 2.0", "4"),
+                Arguments.of("4.0 ^ 2.0", "16.00"),
+
+                Arguments.of("1.0 + 1.0 + 1.0", "3.0"),
+                Arguments.of( (Double.MAX_VALUE + " - 0.0"), String.valueOf(Double.MAX_VALUE) + ".0"),
+                Arguments.of("22.5 * 33.66", "757.350"),
+                Arguments.of(("999.99 / 2.55 / 0.1"), "3921.529411764706"),
+                Arguments.of("4.0 ^ 2.0", "16.00"));
     }
 
     private static Stream<Arguments> provideWhiteSpaceGoodInput(){
