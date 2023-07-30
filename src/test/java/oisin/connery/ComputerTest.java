@@ -59,7 +59,7 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
 
     private void assertComputerCalculatesOutputFromFormula(String formula, String expectedOutput){
         Computer computer = new Computer();
-        assertEquals(expectedOutput, computer.calculate(formula));
+        assertEquals(expectedOutput, computer.evaluateExpression(formula));
     }
 
     private static Stream<Arguments> provideAdditionsInput(){
