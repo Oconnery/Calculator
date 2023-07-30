@@ -1,5 +1,7 @@
 package oisin.connery.operators;
 
+import java.math.BigDecimal;
+
 public class Subtraction extends ArithmeticOperator {
 
     public Subtraction() {
@@ -7,7 +9,7 @@ public class Subtraction extends ArithmeticOperator {
     }
 
     @Override
-    int calculate(int leftNumber, int rightNumber) {
-        return Math.subtractExact(leftNumber, rightNumber);
+    BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber) {
+        return leftNumber.subtract(rightNumber);
     }
 }
