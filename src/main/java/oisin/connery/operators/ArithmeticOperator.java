@@ -1,7 +1,7 @@
 package oisin.connery.operators;
 
 import lombok.Getter;
-import oisin.connery.NumberAndIndexes;
+import oisin.connery.structures.NumberAndIndexes;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,7 +19,7 @@ public abstract class ArithmeticOperator {
         NumberAndIndexes leftNumberAndIndexes = getLeftNumber(expression, positionInExpression);
         NumberAndIndexes rightNumberAndIndexes = getRightNumber(expression, positionInExpression);
         int result = calculate(leftNumberAndIndexes.getNumber(), rightNumberAndIndexes.getNumber());
-        StringBuilder stringBuilder = new StringBuilder(expressionLength);
+        StringBuilder stringBuilder = new StringBuilder(expressionLength); // Can this length be improved to be more accurate
         stringBuilder.append(expression, 0, leftNumberAndIndexes.getStartingIndex());
         stringBuilder.append(result);
         stringBuilder.append(expression,rightNumberAndIndexes.getEndingIndex(), expressionLength);

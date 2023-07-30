@@ -2,6 +2,6 @@ package oisin.connery;
 
 public class Main {
     public static void main(String[] args) {
-
+        // todo scanner/writer
     }
 }
