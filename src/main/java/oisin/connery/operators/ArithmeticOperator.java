@@ -15,7 +15,7 @@ public abstract class ArithmeticOperator {
         this.symbol = symbol;
     }
 
-    public String calculateExpression(String expression, int expressionLength, int positionInExpression){
+    public String evaluateOperator(String expression, int expressionLength, int positionInExpression){
         NumberAndIndexes leftNumberAndIndexes = getLeftNumber(expression, positionInExpression);
         NumberAndIndexes rightNumberAndIndexes = getRightNumber(expression, positionInExpression);
         int result = calculate(leftNumberAndIndexes.getNumber(), rightNumberAndIndexes.getNumber());
@@ -55,5 +55,6 @@ public abstract class ArithmeticOperator {
                 .build();
     }
 
-    abstract int calculate (int leftNumber, int rightNumber);
+    // write a summary here
+    abstract int calculate(int leftNumber, int rightNumber);
 }
