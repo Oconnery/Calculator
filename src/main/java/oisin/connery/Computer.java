@@ -14,9 +14,8 @@ public class Computer {
 
     private String performEvaluations(String expression){
         String postExponentExpression = evaluateOperations(expression, new Exponent());
-        String postDivisionExpression = evaluateOperations(postExponentExpression, new Divison());
-        String postMultiplicationExpression = evaluateOperations(postDivisionExpression, new Multiplication());
-        return evaluateOperations(postMultiplicationExpression, new Addition(), new Subtraction());
+        String postDivisionMultiplicationExpression = evaluateOperations(postExponentExpression, new Divison(), new Multiplication());
+        return evaluateOperations(postDivisionMultiplicationExpression, new Addition(), new Subtraction());
     }
 
     // summary comment
