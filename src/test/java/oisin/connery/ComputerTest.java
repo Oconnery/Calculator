@@ -1,7 +1,5 @@
 package oisin.connery;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -127,36 +125,38 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
     private static Stream<Arguments> provideParenthesesGoodInput(){
         return Stream.of(
                 Arguments.of("(4 + 1)", "5"),
-                Arguments.of("(3 - 2)", "5"),
-                Arguments.of("(9 * 4)", "5"),
+                Arguments.of("(3 - 2)", "1"),
+                Arguments.of("(9 * 4)", "36"),
                 Arguments.of("(20 / 2)", "10"),
-                Arguments.of("(4 ^ 3)", "256"),
+                Arguments.of("(4 ^ 3)", "64"),
 
                 Arguments.of("(4 + 1) + (3 + 5)", "13"),
                 Arguments.of("(4 - 1) + (3 - 5)", "1"), // this one won't work until after I do the +- -+ -- ++ fix
                 Arguments.of("(7 * 7) + (4 * 5)", "69"),
                 Arguments.of("(10/2) + (100/10)", "15"),
-                Arguments.of("(55 ^ 2) + (2 ^ 3)", "3041"),
+                Arguments.of("(55 ^ 2) + (2 ^ 3)", "3033"),
 
-                Arguments.of("(7 * 7) - (4 * 5)", "69"),
-                Arguments.of("(7 * 7) - (4 * 5)", "69"),
-                Arguments.of("(7 * 7) - (4 * 5)", "69"),
-                Arguments.of("(7 * 7) - (4 * 5)", "69"),
+                Arguments.of("(7 * 7) - (4 * 5)", "29"),
+                Arguments.of("(7 * 7) - (4 * 5)", "29"),
+                Arguments.of("(7 * 7) - (4 * 5)", "29"),
+                Arguments.of("(7 * 7) - (4 * 5)", "29"),
 
-                Arguments.of("(7 * 7) * (4 * 5)", "69"),
-                Arguments.of("(7 * 7) * (4 * 5)", "69"),
-                Arguments.of("(7 * 7) * (4 * 5)", "69"),
-                Arguments.of("(7 * 7) * (4 * 5)", "69"),
+                Arguments.of("(7 * 7) * (4 * 5)", "980"),
+                Arguments.of("(7 * 7) * (4 * 5)", "980"),
+                Arguments.of("(7 * 7) * (4 * 5)", "980"),
+                Arguments.of("(7 * 7) * (4 * 5)", "980"),
 
-                Arguments.of("(7 * 7) / (4 * 5)", "69"),
-                Arguments.of("(7 * 7) / (4 * 5)", "69"),
-                Arguments.of("(7 * 7) / (4 * 5)", "69"),
-                Arguments.of("(7 * 7) / (4 * 5)", "69"),
+                Arguments.of("(7 * 7) / (4 * 5)", "2"), // or 3 .. I'm not doing decimals yet.
+                Arguments.of("(7 * 7) / (4 * 5)", "2"),
+                Arguments.of("(7 * 7) / (4 * 5)", "2"),
+                Arguments.of("(7 * 7) / (4 * 5)", "2"),
 
-                Arguments.of("(7 * 7) ^ (4 * 5)", "69"),
-                Arguments.of("(7 * 7) ^ (4 * 5)", "69"),
-                Arguments.of("(7 * 7) ^ (4 * 5)", "69"),
-                Arguments.of("(7 * 7) ^ (4 * 5)", "69"));
+                Arguments.of("(3 * 3) ^ (4 * 1)", "6561"),
+                Arguments.of("(3 * 3) ^ (4 * 1)", "6561"),
+                Arguments.of("(3 * 3) ^ (4 * 1)", "6561"),
+                Arguments.of("(3 * 3) ^ (4 * 1)", "6561"));
+
+                // todo: tests with nested parentheses 9/3+((7+3)/(4*4+1) -9) etc.
     }
 
     private static Stream<Arguments> provideDecimalsInput(){

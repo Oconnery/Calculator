@@ -1,6 +1,7 @@
 package oisin.connery;
 
 import oisin.connery.operators.*;
+import oisin.connery.structures.ExpressionAndIndex;
 import org.apache.commons.lang3.StringUtils;
 
 public class Computer {
@@ -13,7 +14,27 @@ public class Computer {
     }
 
     private String performEvaluations(String expression){
-        String postExponentExpression = evaluateOperations(expression, new Exponent());
+        String postParenthesesExpression = evaluateAllParentheses(expression);
+        return performArithmeticEvaluations(postParenthesesExpression);
+    }
+
+    private String evaluateAllParentheses(String expression){
+        ParenthesesOperator parenthesesOperator = new ParenthesesOperator();
+        int expressionLength = expression.length();
+        for (int i=1; i<expressionLength; i++){
+            if (expression.charAt(i) == parenthesesOperator.getClosingSymbol()){
+                ExpressionAndIndex expressionInsideParentheses = parenthesesOperator.evaluateSingleParentheses(expression, i);
+                String resolvedExpressionInsideParentheses = performArithmeticEvaluations(expressionInsideParentheses.getExpression());
+                StringBuilder stringBuilder = new StringBuilder(expression);
+                stringBuilder.replace(expressionInsideParentheses.getLeftSymbolIndex(), i+1, resolvedExpressionInsideParentheses);
+                return evaluateAllParentheses(stringBuilder.toString());
+            }
+        }
+        return expression;
+    }
+
+    private String performArithmeticEvaluations(String expression){
+        String postExponentExpression = evaluateOperations(expression, new Exponent()); // these new() methods will be done multiple times for parentheses
         String postDivisionMultiplicationExpression = evaluateOperations(postExponentExpression, new Divison(), new Multiplication());
         return evaluateOperations(postDivisionMultiplicationExpression, new Addition(), new Subtraction());
     }
