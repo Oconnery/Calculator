@@ -12,13 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ComputerTest { // extend a class (abstract or not) (static?) that just contains the provideInput methods and their implementations // called CalculateTestData or something. // or could just import it as static import and then reference it possibly. // ComputerTestBase?
 
-    @BeforeEach
-    void setUp() {
-    }
-    @AfterEach
-    void tearDown() {
-    }
-
     //todo: test nulls and empty value inputs
 
     @ParameterizedTest
@@ -57,6 +50,13 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
         assertComputerCalculatesOutputFromFormula(formula, expectedOutput);
     }
 
+
+    @ParameterizedTest
+    @MethodSource({"provideParenthesesGoodInput"})
+    public void testCalculateReturnsCorrectAnswerOnParenthesesInput(String formula, String expectedOutput){
+        assertComputerCalculatesOutputFromFormula(formula, expectedOutput);
+    }
+
     private void assertComputerCalculatesOutputFromFormula(String formula, String expectedOutput){
         Computer computer = new Computer();
         assertEquals(expectedOutput, computer.evaluateExpression(formula));
@@ -65,12 +65,28 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
     private static Stream<Arguments> provideAdditionsInput(){
         return Stream.of(
                 Arguments.of("2 + 5", "7"),
-                Arguments.of("30 + 23", "53"));
+                Arguments.of("30 + 23", "53"),
+                Arguments.of("999 + 1", "1000"),
+                Arguments.of("20456 + 0", "20456"),
+                Arguments.of("11 + 11", "22")
+        );
     }
 
     private static Stream<Arguments> provideSubtractionsInput(){
         return Stream.of(
-                Arguments.of("8 - 3", "5"));
+                Arguments.of("8 - 3", "5"),
+                Arguments.of("11 - 2", "9"),
+                Arguments.of("12 - 1", "11"),
+                Arguments.of("120 - 1", "119"),
+                Arguments.of("123 - 123", "0"),
+                Arguments.of("10000 - 9999", "1"),
+                Arguments.of("100000 - 99999", "1"),
+                Arguments.of("1000000 - 999999", "1"),
+                Arguments.of("10000000 - 9999999", "1"),
+                Arguments.of("100000000 - 99999999", "1"), // approaching Integer max?
+                Arguments.of("2147483647 - 2147483646", "1"),
+                Arguments.of("2147483647 - 2147483647", "0"),
+                Arguments.of("2147483647 - 0", "2147483647"));
     }
 
     private static Stream<Arguments> provideMultiplicationsInput(){
@@ -97,8 +113,6 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
                 Arguments.of("1 ^ 1 ^ 1 ^ 1 ^ 1 ^ 1 ^ 1", "1"),
                 Arguments.of("2 ^ 3 ^ 2 ^ 2", "4096"),
                 Arguments.of("4 ^ 2 ^ 4 ^ 1", "65536")); // this isn't working because 2147483647 is the max integer
-
-
     }
 
     private static Stream<Arguments> provideMixedOperationsInput(){
@@ -108,6 +122,41 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
                 Arguments.of("6 + 3 - 2 + 12", "19"),
                 Arguments.of("2 * 15 + 23", "53"),
                 Arguments.of("10 - 3 ^ 2", "1"));
+    }
+
+    private static Stream<Arguments> provideParenthesesGoodInput(){
+        return Stream.of(
+                Arguments.of("(4 + 1)", "5"),
+                Arguments.of("(3 - 2)", "5"),
+                Arguments.of("(9 * 4)", "5"),
+                Arguments.of("(20 / 2)", "10"),
+                Arguments.of("(4 ^ 3)", "256"),
+
+                Arguments.of("(4 + 1) + (3 + 5)", "13"),
+                Arguments.of("(4 - 1) + (3 - 5)", "1"), // this one won't work until after I do the +- -+ -- ++ fix
+                Arguments.of("(7 * 7) + (4 * 5)", "69"),
+                Arguments.of("(10/2) + (100/10)", "15"),
+                Arguments.of("(55 ^ 2) + (2 ^ 3)", "3041"),
+
+                Arguments.of("(7 * 7) - (4 * 5)", "69"),
+                Arguments.of("(7 * 7) - (4 * 5)", "69"),
+                Arguments.of("(7 * 7) - (4 * 5)", "69"),
+                Arguments.of("(7 * 7) - (4 * 5)", "69"),
+
+                Arguments.of("(7 * 7) * (4 * 5)", "69"),
+                Arguments.of("(7 * 7) * (4 * 5)", "69"),
+                Arguments.of("(7 * 7) * (4 * 5)", "69"),
+                Arguments.of("(7 * 7) * (4 * 5)", "69"),
+
+                Arguments.of("(7 * 7) / (4 * 5)", "69"),
+                Arguments.of("(7 * 7) / (4 * 5)", "69"),
+                Arguments.of("(7 * 7) / (4 * 5)", "69"),
+                Arguments.of("(7 * 7) / (4 * 5)", "69"),
+
+                Arguments.of("(7 * 7) ^ (4 * 5)", "69"),
+                Arguments.of("(7 * 7) ^ (4 * 5)", "69"),
+                Arguments.of("(7 * 7) ^ (4 * 5)", "69"),
+                Arguments.of("(7 * 7) ^ (4 * 5)", "69"));
     }
 
     private static Stream<Arguments> provideDecimalsInput(){
@@ -120,16 +169,10 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
                 Arguments.of("4 ^ 2", "16"));
     }
 
-    private static Stream<Arguments> provideParenthesesGoodInput(){
-        return Stream.of(
-                Arguments.of("4 ^ 2", "16"));
-    }
-
     private static Stream<Arguments> provideNegativeNumbersGoodInput(){
         return Stream.of(
                 Arguments.of("4 ^ 2", "16"));
     }
-
 
     private void testCalculateReturnsExceptionWhen(){
         // worry about exceptions and handling after
