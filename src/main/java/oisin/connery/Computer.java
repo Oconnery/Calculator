@@ -7,10 +7,9 @@ import oisin.connery.validation.ExpressionFormatValidator;
 import org.apache.commons.lang3.StringUtils;
 
 public class Computer {
-    public String evaluateExpression(String expression) throws ExpressionFormatException { // could validate with annotation on expression here with @
+    public String evaluateExpression(String expression) throws ExpressionFormatException {
         expression = StringUtils.deleteWhitespace(expression);
         ExpressionFormatValidator.validate(expression);
-        // todo: validate expression // starts with number or a +-. is no two operations in a row that don't include + or - // no letters
         return performEvaluations(expression);
     }
 
