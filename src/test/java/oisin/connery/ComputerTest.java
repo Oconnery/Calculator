@@ -150,7 +150,6 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
     private static Stream<Arguments> provideMixedOperationsInput(){
         return Stream.of(
                 Arguments.of("1 + 2 * 3", "7"),
-                //Arguments.of("4 ^ 2", "9"),
                 Arguments.of("6 + 3 - 2 + 12", "19"),
                 Arguments.of("2 * 15 + 23", "53"),
                 Arguments.of("10 - 3 ^ 2", "1"));
@@ -165,29 +164,18 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
                 Arguments.of("(4 ^ 3)", "64"),
 
                 Arguments.of("(4 + 1) + (3 + 5)", "13"),
-                Arguments.of("(4 - 1) + (3 - 5)", "1"), // this one won't work until after I do the +- -+ -- ++ fix
+                Arguments.of("(4 - 1) + (3 - 5)", "1"),
                 Arguments.of("(7 * 7) + (4 * 5)", "69"),
                 Arguments.of("(10/2) + (100/10)", "15"),
                 Arguments.of("(55 ^ 2) + (2 ^ 3)", "3033"),
 
                 Arguments.of("(9+(7 * 7)) - (4 * 5)", "38"),
                 Arguments.of("(7 * 7) - (4 * 5)", "29"),
-                Arguments.of("(7 * 7) - (4 * 5)", "29"),
-                Arguments.of("(7 * 7) - (4 * 5)", "29"),
 
-                Arguments.of("(7 * 7) * (4 * 5)", "980"),
-                Arguments.of("(7 * 7) * (4 * 5)", "980"),
-                Arguments.of("(7 * 7) * (4 * 5)", "980"),
                 Arguments.of("(7 * 7) * (4 * 5)", "980"),
 
                 Arguments.of("(7 * 7) / (4 * 5)", "2.45"),
-                Arguments.of("(7 * 7) / (4 * 5)", "2.45"),
-                Arguments.of("(7 * 7) / (4 * 5)", "2.45"),
-                Arguments.of("(7 * 7) / (4 * 5)", "2.45"),
 
-                Arguments.of("(3 * 3) ^ (4 * 1)", "6561"),
-                Arguments.of("(3 * 3) ^ (4 * 1)", "6561"),
-                Arguments.of("(3 * 3) ^ (4 * 1)", "6561"),
                 Arguments.of("(3 * 3) ^ (4 * 1)", "6561"));
 
                 // todo: tests with nested parentheses 9/3+((7+3)/(4*4+1) -9) etc.
