@@ -50,7 +50,7 @@ public abstract class ArithmeticOperator {
         } else if (firstChar == '-'){
             return secondChar != '-';
         }
-        //else throw
+        // todo: else throw
         return false;
     }
 
