@@ -71,6 +71,12 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
     }
 
     @ParameterizedTest
+    @MethodSource({"provideNegativeNumbersInput"})
+    public void testCalculateReturnsCorrectAnswerOnNegativeNumbersInput(String formula, String expectedOutput){
+        assertComputerCalculatesOutputFromFormula(formula, expectedOutput);
+    }
+
+    @ParameterizedTest
     @MethodSource({"provideBadFormatInput"})
     @NullSource
     public void testCalculateThrowsExceptionOnBadFormatInput(String formula){
@@ -133,7 +139,7 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
                 Arguments.of("0 ^ 0", "1"),
                 Arguments.of("0 ^ 2147483647", "0"),
                 Arguments.of("999999999 ^ 0", "1"),
-                Arguments.of("2147483647 ^ 0", "1"), // doesnt work now because max value is 999999999. I could always try catch arithmeticException in the exponent implementation and try math.pow after converting to primitives
+                Arguments.of("2147483647 ^ 0", "1"), // doesn't work now because max value is 999999999. I could always try catch arithmeticException in the exponent implementation and try math.pow after converting to primitives
                 Arguments.of("0 ^ 0", "1"),
                 Arguments.of("4 ^ 4 ^ 2", "65536"),
                 Arguments.of("1 ^ 1 ^ 1 ^ 1 ^ 1 ^ 1 ^ 1", "1"),
@@ -246,9 +252,15 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
 
     private static Stream<Arguments> provideNegativeNumbersInput(){
         return Stream.of(
-                Arguments.of("4 ^ 2", "16"));
+                Arguments.of("-4 + 2", "-2"),
+                Arguments.of("-4-8", "-12"),
+                Arguments.of("4 - 8", "-4"),
+                Arguments.of("100 -- 2", "102"),
+                Arguments.of("100 +- 2", "98"),
+                Arguments.of("100 ++ 2", "102"),
+                Arguments.of("100 -+ 2", "98"),
+                Arguments.of("-4 -4 +2", "-6"));
     }
-
 
     private void testCalculateReturnsExceptionWhen(){
         // worry about exceptions and handling after
