@@ -15,7 +15,7 @@ public class ExpressionFormatValidator {
             throw new ExpressionFormatException("Expression is empty or contains only whitespace");
         }
         if (!startsWithANumberOrParentheses(expression)){
-            throw new ExpressionFormatException("Expression does not start with a number");
+            throw new ExpressionFormatException("Expression does not start with a number, parentheses or a (-) minus or (+) plus sign");
         }
         if (!endsWithANumberOrParentheses(expression)){
             throw new ExpressionFormatException("Expression does not end with a number");
@@ -25,7 +25,7 @@ public class ExpressionFormatValidator {
 
     private static boolean startsWithANumberOrParentheses(String expression){
         char firstChar = expression.charAt(0);
-        return firstChar == '(' || firstChar >= '0' && firstChar<= '9';
+        return firstChar == '(' || firstChar == plusAndMinusCharacters[0]||  firstChar == plusAndMinusCharacters[1]||firstChar >= '0' && firstChar<= '9';
     }
 
     private static boolean endsWithANumberOrParentheses(String expression){
