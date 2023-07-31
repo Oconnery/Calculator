@@ -11,7 +11,6 @@ public abstract class ArithmeticOperator {
 
     private final char symbol;
 
-
     protected ArithmeticOperator(char symbol) {
         this.symbol = symbol;
     }

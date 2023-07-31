@@ -10,32 +10,31 @@ public class NumberRetriever {
 
     private static final String WHOLE_OR_DECIMAL_NUMBER_REGEX = "\\d*\\.?\\d+";
 
-    public static NumberAndIndexes getNumberLeftOfOperator(String expression, int operatorPositionInExpression, boolean isNegative){
-        String expressionLeftOfOperator = expression.substring(0, operatorPositionInExpression);
+    public static NumberAndIndexes getNumberLeftOfOperator(String expression, int operatorIndex, boolean isNegative){
+        String expressionLeftOfOperator = expression.substring(0, operatorIndex);
         String reversedExpressionOfLeft = new StringBuilder(expressionLeftOfOperator).reverse().toString(); // I could improve on performance if I didnt reverse the string, but instead just started to match from the end and reversed the backwards number afterwards
-        Pattern numberPattern = Pattern.compile(WHOLE_OR_DECIMAL_NUMBER_REGEX); // I can perhaps add a $ here to read from the back. This will improve performance.
+        Pattern numberPattern = Pattern.compile(WHOLE_OR_DECIMAL_NUMBER_REGEX); // instead of using a regex I could just search through it from the back to save performance
         Matcher matcher = numberPattern.matcher(reversedExpressionOfLeft);
 
         if (expression.charAt(0) == '-')
             isNegative = true;
 
-        matcher.find();
+        matcher.find(); // is greedy
         StringBuilder numberBuilder = new StringBuilder(matcher.group()).reverse();
         String numberAsString = numberBuilder.toString();
         BigDecimal number = new BigDecimal(numberAsString);
 
         return NumberAndIndexes.builder()
                 .number(isNegative?number.negate():number)
-                .startingIndex(operatorPositionInExpression - matcher.end() - (isNegative?1:0))
+                .startingIndex(operatorIndex - matcher.end() - (isNegative?1:0))
                 .build();
     }
 
-    public static NumberAndIndexes getNumberRightOfOperator(String expression, int indexRightOfOperator, boolean isNegative){
-        String expressionRightOfOperator = expression.substring(indexRightOfOperator); // name right expressionInstead
-        Pattern numberPattern = Pattern.compile(WHOLE_OR_DECIMAL_NUMBER_REGEX);
-
-        Matcher matcher = numberPattern.matcher(expressionRightOfOperator);
-        matcher.find();
+    public static NumberAndIndexes getNumberRightOfOperator(String expression, int operatorIndex, boolean isNegative){
+        int indexRightOfOperator = operatorIndex+1;
+        String expressionRightOfOperator = expression.substring(indexRightOfOperator);
+        Matcher matcher = Pattern.compile(WHOLE_OR_DECIMAL_NUMBER_REGEX).matcher(expressionRightOfOperator);
+        matcher.find(); // Is greedy
         BigDecimal number = new BigDecimal(matcher.group());
 
         return NumberAndIndexes.builder()
