@@ -19,21 +19,8 @@ public abstract class ArithmeticOperator {
 
     public String evaluateOperator(String expression, int positionInExpression){ // 4--6 should be read as 7+6 -7+6 should be -1 answer.
         boolean isNegativeNumber = false;
-        char leftChar = expression.charAt(positionInExpression-1);
         char rightChar = expression.charAt(positionInExpression+1);
 
-        if (leftChar == '-' || leftChar == '+'){
-            isNegativeNumber = mixOfAddsAndMinusesResultsInNegative(leftChar, symbol);
-            StringBuilder stringBuilder = new StringBuilder(expression).deleteCharAt(positionInExpression-1);
-            stringBuilder.setCharAt(positionInExpression, isNegativeNumber?'-':'+');
-            positionInExpression--;
-            expression = stringBuilder.toString();
-            if (positionInExpression == 0 || positionInExpression == expression.length()-1){
-                return expression;
-            } else {
-                evaluateOperator(expression, positionInExpression);
-            }
-        }
         if (rightChar == '-' || rightChar == '+'){
             isNegativeNumber = mixOfAddsAndMinusesResultsInNegative(symbol, rightChar); // 7--2
             StringBuilder stringBuilder = new StringBuilder(expression).deleteCharAt(positionInExpression+1);
@@ -53,6 +40,8 @@ public abstract class ArithmeticOperator {
         stringBuilder.replace(leftNumberAndIndexes.getStartingIndex(), rightNumberAndIndexes.getEndingIndex() ,result.toPlainString());
         return stringBuilder.toString(); // StringBuilder code in it's own method?
     }
+
+    //private void
 
     private boolean mixOfAddsAndMinusesResultsInNegative(char firstChar, char secondChar){
         if (firstChar == '+'){
