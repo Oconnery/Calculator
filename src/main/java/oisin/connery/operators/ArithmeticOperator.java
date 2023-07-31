@@ -19,12 +19,9 @@ public abstract class ArithmeticOperator {
         boolean isNegativeNumber = false;
         char rightChar = expression.charAt(positionInExpression+1);
 
-        if (rightChar == '-' || rightChar == '+'){ //--7+3
-            isNegativeNumber = mixOfAddsAndMinusesResultsInNegative(symbol, rightChar);
-            StringBuilder stringBuilder = new StringBuilder(expression).deleteCharAt(positionInExpression+1);
-            stringBuilder.setCharAt(positionInExpression, isNegativeNumber?'-':'+');
+        if (rightChar == '-' || rightChar == '+'){
+            expression = dealWithMultipleAddsOrMinuses(expression, positionInExpression, rightChar);
             positionInExpression++;
-            expression = stringBuilder.toString();
             if (positionInExpression == expression.length()-1){
                 return expression;
             } else {
@@ -34,12 +31,18 @@ public abstract class ArithmeticOperator {
         NumberAndIndexes leftNumberAndIndexes = NumberRetriever.getNumberLeftOfOperator(expression, positionInExpression, isNegativeNumber);
         NumberAndIndexes rightNumberAndIndexes = NumberRetriever.getNumberRightOfOperator(expression, positionInExpression, isNegativeNumber);
         BigDecimal result = calculate(leftNumberAndIndexes.getNumber(), rightNumberAndIndexes.getNumber());
-        StringBuilder stringBuilder = new StringBuilder(expression); // Can this length be improved to be more accurate
+        StringBuilder stringBuilder = new StringBuilder(expression); // Can this length be improved to be more accurate?
         stringBuilder.replace(leftNumberAndIndexes.getStartingIndex(), rightNumberAndIndexes.getEndingIndex() ,result.toPlainString());
         return stringBuilder.toString(); // StringBuilder code in it's own method?
     }
 
-    //private void
+    private String dealWithMultipleAddsOrMinuses(String expression, int positionInExpression, char rightChar) {
+        boolean isNegativeNumber;
+        isNegativeNumber = mixOfAddsAndMinusesResultsInNegative(symbol, rightChar);
+        StringBuilder resolvePlusMinusBuilder = new StringBuilder(expression).deleteCharAt(positionInExpression +1);
+        resolvePlusMinusBuilder.setCharAt(positionInExpression, isNegativeNumber?'-':'+');
+        return resolvePlusMinusBuilder.toString();
+    }
 
     private boolean mixOfAddsAndMinusesResultsInNegative(char firstChar, char secondChar){
         if (firstChar == '+'){

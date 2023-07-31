@@ -12,17 +12,16 @@ public class NumberRetriever {
 
     public static NumberAndIndexes getNumberLeftOfOperator(String expression, int operatorIndex, boolean isNegative){
         String expressionLeftOfOperator = expression.substring(0, operatorIndex);
-        String reversedExpressionOfLeft = new StringBuilder(expressionLeftOfOperator).reverse().toString(); // I could improve on performance if I didnt reverse the string, but instead just started to match from the end and reversed the backwards number afterwards
-        Pattern numberPattern = Pattern.compile(WHOLE_OR_DECIMAL_NUMBER_REGEX); // instead of using a regex I could just search through it from the back to save performance
-        Matcher matcher = numberPattern.matcher(reversedExpressionOfLeft);
-
-        if (expression.charAt(0) == '-')
-            isNegative = true;
+        String reversedExpressionOfLeft = new StringBuilder(expressionLeftOfOperator).reverse().toString(); // I could improve on performance if I didn't reverse the string, but instead just started to match from the end and reversed the backwards number afterwards
+        Matcher matcher = Pattern.compile(WHOLE_OR_DECIMAL_NUMBER_REGEX).matcher(reversedExpressionOfLeft); // instead of using a regex I could just search through it from the back to save performance
 
         matcher.find(); // is greedy
         StringBuilder numberBuilder = new StringBuilder(matcher.group()).reverse();
         String numberAsString = numberBuilder.toString();
         BigDecimal number = new BigDecimal(numberAsString);
+
+        if (expression.charAt(0) == '-')
+            isNegative = true;
 
         return NumberAndIndexes.builder()
                 .number(isNegative?number.negate():number)
@@ -42,5 +41,4 @@ public class NumberRetriever {
                 .endingIndex(indexRightOfOperator + matcher.end())
                 .build();
     }
-
 }
