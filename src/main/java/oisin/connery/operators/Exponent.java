@@ -9,12 +9,7 @@ public class Exponent extends ArithmeticOperator {
     }
 
     @Override
-    BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber) { // should be int or Integer?
-        // todo: implementation
+    BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber) {
         return leftNumber.pow(rightNumber.intValue());
-    }
-
-    BigDecimal calculate(BigDecimal leftNumber, int rightNumber){
-        return leftNumber.pow(rightNumber);
     }
 }

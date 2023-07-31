@@ -1,12 +1,15 @@
 package oisin.connery;
 
+import oisin.connery.exceptions.ExpressionFormatException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
 
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ComputerTest { // extend a class (abstract or not) (static?) that just contains the provideInput methods and their implementations // called CalculateTestData or something. // or could just import it as static import and then reference it possibly. // ComputerTestBase?
 
@@ -61,9 +64,27 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
         assertComputerCalculatesOutputFromFormula(formula, expectedOutput);
     }
 
+    @ParameterizedTest
+    @MethodSource({"provideWhiteSpacesInput"})
+    public void testCalculateReturnsCorrectAnswerOnWhiteSpaceInput(String formula, String expectedOutput){
+        assertComputerCalculatesOutputFromFormula(formula, expectedOutput);
+    }
+
+    @ParameterizedTest
+    @MethodSource({"provideBadFormatInput"})
+    @NullSource
+    public void testCalculateThrowsExceptionOnBadFormatInput(String formula){
+        assertComputerThrowsErrorFromBadFormulas(formula);
+    }
+
     private void assertComputerCalculatesOutputFromFormula(String formula, String expectedOutput){
         Computer computer = new Computer();
         assertEquals(expectedOutput, computer.evaluateExpression(formula));
+    }
+
+    private void assertComputerThrowsErrorFromBadFormulas(String formula){
+        Computer computer = new Computer();
+        assertThrows(ExpressionFormatException.class, ()-> computer.evaluateExpression(formula));
     }
 
     private static Stream<Arguments> provideAdditionsInput(){
@@ -117,7 +138,7 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
                 Arguments.of("4 ^ 4 ^ 2", "65536"),
                 Arguments.of("1 ^ 1 ^ 1 ^ 1 ^ 1 ^ 1 ^ 1", "1"),
                 Arguments.of("2 ^ 3 ^ 2 ^ 2", "4096"),
-                Arguments.of("4 ^ 2 ^ 4 ^ 1", "65536")); // this isn't working because 2147483647 is the max integer
+                Arguments.of("4 ^ 2 ^ 4 ^ 1", "65536"));
     }
 
     private static Stream<Arguments> provideMixedOperationsInput(){
@@ -143,7 +164,7 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
                 Arguments.of("(10/2) + (100/10)", "15"),
                 Arguments.of("(55 ^ 2) + (2 ^ 3)", "3033"),
 
-                Arguments.of("(7 * 7) - (4 * 5)", "29"),
+                Arguments.of("(9+(7 * 7)) - (4 * 5)", "38"),
                 Arguments.of("(7 * 7) - (4 * 5)", "29"),
                 Arguments.of("(7 * 7) - (4 * 5)", "29"),
                 Arguments.of("(7 * 7) - (4 * 5)", "29"),
@@ -175,25 +196,65 @@ class ComputerTest { // extend a class (abstract or not) (static?) that just con
                 Arguments.of("4.0 ^ 2.0", "16.00"),
 
                 Arguments.of("1.0 + 1.0 + 1.0", "3.0"),
-                Arguments.of( (Double.MAX_VALUE + " - 0.0"), String.valueOf(Double.MAX_VALUE) + ".0"),
+                Arguments.of( (Double.MAX_VALUE + " - 0.0"), (Double.MAX_VALUE) + ".0"),
                 Arguments.of("22.5 * 33.66", "757.350"),
                 Arguments.of(("999.99 / 2.55 / 0.1"), "3921.529411764706"),
                 Arguments.of("4.0 ^ 2.0", "16.00"));
     }
 
-    private static Stream<Arguments> provideWhiteSpaceGoodInput(){
+    private static Stream<Arguments> provideWhiteSpacesInput(){
+        return Stream.of(
+                Arguments.of("4    ^2", "16"),
+                Arguments.of("4+               2   ", "6"),
+                Arguments.of(" 4  -   1 ", "3"));
+    }
+
+    private static Stream<Arguments> provideBadFormatInput(){
+        return Stream.of(
+                Arguments.of(""),
+                Arguments.of(" "),
+
+                Arguments.of("**"),
+                Arguments.of("//4"),
+                Arguments.of("1^^"),
+
+                Arguments.of("+*"),
+                Arguments.of("5+/1"),
+                Arguments.of("4+^22"),
+
+                Arguments.of("11-*999"),
+                Arguments.of("2-/5"),
+                Arguments.of("3-^4"),
+
+                Arguments.of("*^"),
+                Arguments.of("(11+4)*/12"),
+
+                Arguments.of("100/^2"),
+                Arguments.of("9/9/*9"),
+
+                Arguments.of("1+3+5*6+*"),
+
+                Arguments.of("9/9a/*9"),
+                Arguments.of("9+b*9"),
+                Arguments.of("b"),
+                Arguments.of("9+1b"),
+                Arguments.of("9+1b-9"),
+                Arguments.of("9$-1"),
+                Arguments.of("$4+1")
+        );
+    }
+
+    private static Stream<Arguments> provideNegativeNumbersInput(){
         return Stream.of(
                 Arguments.of("4 ^ 2", "16"));
     }
 
-    private static Stream<Arguments> provideNegativeNumbersGoodInput(){
-        return Stream.of(
-                Arguments.of("4 ^ 2", "16"));
-    }
 
     private void testCalculateReturnsExceptionWhen(){
         // worry about exceptions and handling after
     }
 
     // Mockito tests if necessary
+
+    // todo: unit tests for methods individually
 }
