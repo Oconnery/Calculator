@@ -9,7 +9,7 @@ public class Addition extends ArithmeticOperator {
     }
 
     @Override
-    BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber) {
+    protected BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber) {
         return leftNumber.add(rightNumber);
     }
 }

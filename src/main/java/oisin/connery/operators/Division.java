@@ -10,7 +10,7 @@ public class Division extends ArithmeticOperator{
     }
 
     @Override
-    BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber) {
+    protected BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber) {
         return leftNumber.divide(rightNumber, MathContext.DECIMAL64);
     }
 }
