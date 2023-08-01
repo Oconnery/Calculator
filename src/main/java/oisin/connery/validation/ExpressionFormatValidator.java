@@ -1,24 +1,25 @@
 package oisin.connery.validation;
 
+import oisin.connery.exceptions.ExceptionMessages;
 import oisin.connery.exceptions.ExpressionFormatException;
 
 public class ExpressionFormatValidator {
     private static final char [] alwaysAllowedCharacters = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    private static final char [] allowedCharactersOneInARowOnly = {'.','*', '/', '^', 'E'};
+    private static final char [] allowedCharactersOneInARowOnly = {'.','*', '/', '^', 'E', '!'};
     private static final char [] plusAndMinusCharacters = {'+', '-'};
     private static final char [] parenthesesCharacters = {'(', ')'};
 
     public static void validate(String expression) throws ExpressionFormatException {
         if (expression == null)
-            throw new ExpressionFormatException("Expression is null");
+            throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_IS_NULL);
         if (expression.isBlank()){
-            throw new ExpressionFormatException("Expression is empty or contains only whitespace");
+            throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_IS_EMPTY);
         }
         if (!startsWithANumberOrParentheses(expression)){
-            throw new ExpressionFormatException("Expression does not start with a number, parentheses or a (-) minus or (+) plus sign");
+            throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_START_INCORRECT);
         }
         if (!endsWithANumberOrParentheses(expression)){
-            throw new ExpressionFormatException("Expression does not end with a number");
+            throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_ENDING_INCORRECT);
         }
         throwExceptionOnIllegitimateText(expression);
     }
@@ -53,9 +54,7 @@ public class ExpressionFormatValidator {
             for (char charAllowedOnceInARowOnly: allowedCharactersOneInARowOnly) {
                 if (c == charAllowedOnceInARowOnly) {
                     if (lastCharWasOperator || lastCharWasPlusOrMinus){
-                        throw new ExpressionFormatException("Expression has two operators in a row which are not allowed to be in a row: "
-                                .concat(String.valueOf(c)).concat(" and ").concat(String.valueOf(charAllowedOnceInARowOnly))
-                                .concat(" at index positions of ").concat(String.valueOf(i-1)).concat(" and ").concat(String.valueOf(i)).concat(" in the formula"));
+                        throw new ExpressionFormatException(ExceptionMessages.twoCharsInARowNotAllowed(c, charAllowedOnceInARowOnly, i));
                     } else {
                         lastCharWasOperator = true;
                         continue outerloop;
@@ -80,10 +79,10 @@ public class ExpressionFormatValidator {
                 lastCharWasOperator = false;
                 continue outerloop;
             }
-            throw new ExpressionFormatException("Expression has a character which is not allowed: ".concat(String.valueOf(c)).concat(" at index position ").concat(String.valueOf(i)).concat(" in the formula"));
+            throw new ExpressionFormatException(ExceptionMessages.unallowedChar(c,i));
         }
         if (leftParenthesesCount!=rightParenthesesCount){
-            throw new ExpressionFormatException("Expression has an uneven number of left parentheses brackets: ".concat(String.valueOf(leftParenthesesCount)).concat(" and right parentheses brackets: ").concat(String.valueOf(rightParenthesesCount)));
+            throw new ExpressionFormatException(ExceptionMessages.unevenParenthesesNumber(leftParenthesesCount, rightParenthesesCount));
         }
     }
 }
