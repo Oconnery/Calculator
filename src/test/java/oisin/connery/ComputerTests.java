@@ -13,10 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ComputerTests {
-    //todo: test nulls and empty value inputs
-
     @ParameterizedTest
-    @MethodSource({"provideAdditionsInput"}) // Ideally I would just be able to add the sources here and only have this 1 method and remove submethod and other methods.
+    @MethodSource({"provideAdditionsInput"})
     public void testCalculateReturnsCorrectAnswerOnAdditionsInput(String formula, String expectedOutput){
         assertComputerCalculatesOutputFromFormula(formula, expectedOutput);
     }
@@ -73,6 +71,12 @@ class ComputerTests {
     @ParameterizedTest
     @MethodSource({"provideNegativeNumbersInput"})
     public void testCalculateReturnsCorrectAnswerOnNegativeNumbersInput(String formula, String expectedOutput){
+        assertComputerCalculatesOutputFromFormula(formula, expectedOutput);
+    }
+
+    @ParameterizedTest
+    @MethodSource({"provideFactorialNumbersInput"})
+    public void testFactorialReturnsCorrectAnswerOnNegativeNumbersInput(String formula, String expectedOutput){
         assertComputerCalculatesOutputFromFormula(formula, expectedOutput);
     }
 
@@ -150,7 +154,7 @@ class ComputerTests {
                 Arguments.of("1 ^ 0", "1"),
                 Arguments.of("0 ^ 0", "1"),
                 Arguments.of("999999999 ^ 0", "1"),
-                Arguments.of("2147483647 ^ 0", "1"), // doesn't work now because max value is 999999999. I could always try catch arithmeticException in the exponent implementation and try math.pow after converting to primitives
+                Arguments.of("2147483647 ^ 0", "1"),
                 Arguments.of("0 ^ 0", "1"),
                 Arguments.of("4 ^ 4 ^ 2", "65536"),
                 Arguments.of("1 ^ 1 ^ 1 ^ 1 ^ 1 ^ 1 ^ 1", "1"),
@@ -163,7 +167,8 @@ class ComputerTests {
                 Arguments.of("1 + 2 * 3", "7"),
                 Arguments.of("6 + 3 - 2 + 12", "19"),
                 Arguments.of("2 * 15 + 23", "53"),
-                Arguments.of("10 - 3 ^ 2", "1"));
+                Arguments.of("10 - 3 ^ 2", "1"),
+                Arguments.of("11! + 17 - 9", "39916808"));
     }
 
     private static Stream<Arguments> provideParenthesesInput(){
@@ -187,12 +192,14 @@ class ComputerTests {
 
                 Arguments.of("(7 * 7) / (4 * 5)", "2.45"),
 
-                Arguments.of("(3 * 3) ^ (4 * 1)", "6561"));
+                Arguments.of("(3 * 3) ^ (4 * 1)", "6561"),
+
+                Arguments.of("(5!) - (6! -10)", "-590"));
     }
 
     private static Stream<Arguments> provideDecimalsInput(){
         return Stream.of(
-                Arguments.of("1.0 + 1.0", "2.0"), // To save performance of using bigDecimals I could use double up until the max point for each operation.
+                Arguments.of("1.0 + 1.0", "2.0"),
                 Arguments.of("4.0 - 2.0", "2.0"),
                 Arguments.of("2 * 3.0", "6.0"),
                 Arguments.of("8.0 / 2.0", "4"),
@@ -245,9 +252,10 @@ class ComputerTests {
                 Arguments.of("9$-1"),
                 Arguments.of("$4+1"),
 
+                Arguments.of("2!!+2!"),
+
                 Arguments.of(generateTooLargeExponentPowerNumber()),
-                Arguments.of(generateTooLargeExponentPowerNumber().concat("9"))
-        );
+                Arguments.of(generateTooLargeExponentPowerNumber().concat("9")));
     }
 
     private static Stream<Arguments> provideNegativeNumbersInput(){
@@ -259,6 +267,15 @@ class ComputerTests {
                 Arguments.of("100 +- 2", "98"),
                 Arguments.of("100 ++ 2", "102"),
                 Arguments.of("100 -+ 2", "98"),
-                Arguments.of("-4 -4 +2", "-6"));
+                Arguments.of("-4 -4 +2", "-6"),
+                Arguments.of("-4 -4 -+ 2", "-10"));
+    }
+
+    private static Stream<Arguments> provideFactorialNumbersInput(){
+        return Stream.of(
+                Arguments.of("4!", "24"),
+                Arguments.of("12!", "479001600"),
+                Arguments.of("2!+2!", "4"),
+                Arguments.of("2!-2!-6!", "-720"));
     }
 }

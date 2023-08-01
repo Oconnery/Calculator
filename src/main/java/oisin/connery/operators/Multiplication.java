@@ -2,7 +2,7 @@ package oisin.connery.operators;
 
 import java.math.BigDecimal;
 
-public class Multiplication extends ArithmeticOperator{
+public class Multiplication extends BasicArithmeticOperator {
 
     public Multiplication() {
         super('*');

@@ -3,7 +3,7 @@ package oisin.connery.operators;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
-public class Division extends ArithmeticOperator{
+public class Division extends BasicArithmeticOperator {
 
     public Division() {
         super('/');

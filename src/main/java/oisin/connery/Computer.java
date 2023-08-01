@@ -6,6 +6,8 @@ import oisin.connery.structures.ExpressionAndIndex;
 import oisin.connery.validation.ExpressionFormatValidator;
 import org.apache.commons.lang3.StringUtils;
 
+// todo: Could store a Map<Map<>> cache of parentheses symbol location, addition symbol location etc. in validation
+//  pass and then just go there instead of looping through expression so many times.
 public class Computer {
     public String calculateExpression(String expression) throws ExpressionFormatException {
         expression = StringUtils.deleteWhitespace(expression);
@@ -19,11 +21,11 @@ public class Computer {
     }
 
     private String evaluateAllParentheses(String expression){
-        ParenthesesOperator parenthesesOperator = new ParenthesesOperator();
+        Parentheses parentheses = new Parentheses();
         int expressionLength = expression.length();
         for (int i=1; i<expressionLength; i++){
-            if (expression.charAt(i) == parenthesesOperator.getClosingSymbol()){
-                ExpressionAndIndex expressionInsideParentheses = parenthesesOperator.evaluateSingleParentheses(expression, i);
+            if (expression.charAt(i) == parentheses.getClosingSymbol()){
+                ExpressionAndIndex expressionInsideParentheses = parentheses.extractSubExpressionFromExpression(expression, i);
                 String resolvedExpressionInsideParentheses = performArithmetic(expressionInsideParentheses.getExpression());
                 StringBuilder stringBuilder = new StringBuilder(expression);
                 stringBuilder.replace(expressionInsideParentheses.getLeftSymbolIndex(), i+1, resolvedExpressionInsideParentheses);
@@ -34,35 +36,33 @@ public class Computer {
     }
 
     private String performArithmetic(String expression){
-        String postExponentExpression = calculateOperations(expression, new Exponent()); // these new() methods will be done multiple times for parentheses
+        String postFactorialExpression = calculateOperations(expression, new FactorialOperator());
+        String postExponentExpression = calculateOperations(postFactorialExpression, new Exponent());
         String postDivisionMultiplicationExpression = calculateOperations(postExponentExpression, new Division(), new Multiplication());
         return calculateOperations(postDivisionMultiplicationExpression, new Addition(), new Subtraction());
     }
 
     // summary comment
-    private String calculateOperations(String expression, ArithmeticOperator arithmeticOperator){
+    private String calculateOperations(String expression, Operator operator){
         int expressionLength = expression.length();
         for (int i=1; i<expressionLength; i++){
-            if (expression.charAt(i) == arithmeticOperator.getSymbol()){
-                String newExpression = arithmeticOperator.evaluateOperator(expression, i);
-                return calculateOperations(newExpression, arithmeticOperator);
+            if (expression.charAt(i) == operator.getSymbol()){
+                String newExpression = operator.evaluate(expression, i);
+                return calculateOperations(newExpression, operator);
             }
         }
         return expression;
     }
 
-    /*
-        write summary comment here about same as above but two with same precedence
-    */
-    private String calculateOperations(String expression, ArithmeticOperator arithmeticOperatorOne, ArithmeticOperator arithmeticOperatorTwo){
+    private String calculateOperations(String expression, Operator operatorOne, Operator operatorTwo){
         int expressionLength = expression.length();
         for (int i=1; i<expressionLength; i++){
-            if (expression.charAt(i) == arithmeticOperatorOne.getSymbol()){
-                String newExpression = arithmeticOperatorOne.evaluateOperator(expression, i);
-                return calculateOperations(newExpression, arithmeticOperatorOne, arithmeticOperatorTwo);
-            } else if (expression.charAt(i) == arithmeticOperatorTwo.getSymbol()) {
-                String newExpression = arithmeticOperatorTwo.evaluateOperator(expression, i);
-                return calculateOperations(newExpression, arithmeticOperatorOne, arithmeticOperatorTwo);
+            if (expression.charAt(i) == operatorOne.getSymbol()){
+                String newExpression = operatorOne.evaluate(expression, i);
+                return calculateOperations(newExpression, operatorOne, operatorTwo);
+            } else if (expression.charAt(i) == operatorTwo.getSymbol()) {
+                String newExpression = operatorTwo.evaluate(expression, i);
+                return calculateOperations(newExpression, operatorOne, operatorTwo);
             }
         }
         return expression;
