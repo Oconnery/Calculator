@@ -9,29 +9,30 @@ import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 
 @Getter
-public abstract class ArithmeticOperator {
+public abstract class BasicArithmeticOperator implements Operator{
 
     private final char symbol;
 
-    protected ArithmeticOperator(char symbol) {
+    protected BasicArithmeticOperator(char symbol) {
         this.symbol = symbol;
     }
 
-    public String evaluateOperator(String expression, int positionInExpression){
-        boolean isNegativeNumber = false;
+    @Override
+    public String evaluate(String expression, int positionInExpression){
         char rightChar = expression.charAt(positionInExpression+1);
 
         if (rightChar == '-' || rightChar == '+'){
-            expression = dealWithMultipleAddsOrMinuses(expression, positionInExpression, rightChar);
+            expression = evaluateMultipleSignOperators(expression, positionInExpression, rightChar);
             positionInExpression++;
             if (positionInExpression == expression.length()-1){
                 return expression;
             } else {
-                return evaluateOperator(expression, positionInExpression);
+                return evaluate(expression, positionInExpression);
             }
         }
-        NumberAndIndexes leftNumberAndIndexes = NumberRetriever.getNumberLeftOfOperator(expression, positionInExpression, isNegativeNumber);
-        NumberAndIndexes rightNumberAndIndexes = NumberRetriever.getNumberRightOfOperator(expression, positionInExpression, isNegativeNumber);
+
+        NumberAndIndexes leftNumberAndIndexes = NumberRetriever.getNumberLeftOfOperator(expression, positionInExpression);
+        NumberAndIndexes rightNumberAndIndexes = NumberRetriever.getNumberRightOfOperator(expression, positionInExpression);
         BigDecimal result = calculate(leftNumberAndIndexes.getNumber(), rightNumberAndIndexes.getNumber());
 
         StringBuilder stringBuilder = new StringBuilder(expression);
@@ -39,26 +40,28 @@ public abstract class ArithmeticOperator {
         return stringBuilder.toString(); // StringBuilder code in it's own method?
     }
 
-    private String dealWithMultipleAddsOrMinuses(String expression, int positionInExpression, char rightChar) {
-        boolean isNegativeNumber = mixOfAddsAndMinusesResultsInNegative(symbol, rightChar);
+    private String evaluateMultipleSignOperators(String expression, int positionInExpression, char rightChar) { // improve method name
         StringBuilder resolvePlusMinusBuilder = new StringBuilder(expression);
         resolvePlusMinusBuilder.deleteCharAt(positionInExpression +1);
-        resolvePlusMinusBuilder.setCharAt(positionInExpression, isNegativeNumber?'-':'+');
+        resolvePlusMinusBuilder.setCharAt(positionInExpression, evaluateSigns(symbol, rightChar));
         return resolvePlusMinusBuilder.toString();
     }
 
-    private boolean mixOfAddsAndMinusesResultsInNegative(char firstChar, char secondChar){
-        if (firstChar == '+'){
-            return secondChar == '-';
-        } else if (firstChar == '-'){
-            return secondChar != '-';
+    private char evaluateSigns(char firstChar, char secondChar){
+        if (firstChar == '+' && secondChar == '-') {
+            return '-';
+        } else if (firstChar == '-' && secondChar == '+') {
+            return '-';
+        } else if (firstChar == '-' && secondChar == '-') {
+            return '+';
+        } else if (firstChar == '+' && secondChar == '+') {
+            return '+';
         } else{
             throw new InvalidParameterException(ExceptionMessages.wrongCharacterOnAddMinusMethodCheck(firstChar, secondChar));
         }
     }
 
     // todo: look into String.indexOf methods
-
     // write a summary here
     protected abstract BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber);
 }

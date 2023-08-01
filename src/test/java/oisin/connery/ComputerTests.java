@@ -150,7 +150,7 @@ class ComputerTests {
                 Arguments.of("1 ^ 0", "1"),
                 Arguments.of("0 ^ 0", "1"),
                 Arguments.of("999999999 ^ 0", "1"),
-                Arguments.of("2147483647 ^ 0", "1"), // doesn't work now because max value is 999999999. I could always try catch arithmeticException in the exponent implementation and try math.pow after converting to primitives
+                Arguments.of("2147483647 ^ 0", "1"),
                 Arguments.of("0 ^ 0", "1"),
                 Arguments.of("4 ^ 4 ^ 2", "65536"),
                 Arguments.of("1 ^ 1 ^ 1 ^ 1 ^ 1 ^ 1 ^ 1", "1"),
@@ -259,6 +259,8 @@ class ComputerTests {
                 Arguments.of("100 +- 2", "98"),
                 Arguments.of("100 ++ 2", "102"),
                 Arguments.of("100 -+ 2", "98"),
-                Arguments.of("-4 -4 +2", "-6"));
+                Arguments.of("-4 -4 +2", "-6"),
+                Arguments.of("-4 -4 -+ 2", "-10")
+        );
     }
 }

@@ -19,11 +19,11 @@ public class Computer {
     }
 
     private String evaluateAllParentheses(String expression){
-        ParenthesesOperator parenthesesOperator = new ParenthesesOperator();
+        Parentheses parentheses = new Parentheses();
         int expressionLength = expression.length();
         for (int i=1; i<expressionLength; i++){
-            if (expression.charAt(i) == parenthesesOperator.getClosingSymbol()){
-                ExpressionAndIndex expressionInsideParentheses = parenthesesOperator.evaluateSingleParentheses(expression, i);
+            if (expression.charAt(i) == parentheses.getClosingSymbol()){
+                ExpressionAndIndex expressionInsideParentheses = parentheses.extractSubExpressionFromExpression(expression, i);
                 String resolvedExpressionInsideParentheses = performArithmetic(expressionInsideParentheses.getExpression());
                 StringBuilder stringBuilder = new StringBuilder(expression);
                 stringBuilder.replace(expressionInsideParentheses.getLeftSymbolIndex(), i+1, resolvedExpressionInsideParentheses);
@@ -40,12 +40,12 @@ public class Computer {
     }
 
     // summary comment
-    private String calculateOperations(String expression, ArithmeticOperator arithmeticOperator){
+    private String calculateOperations(String expression, BasicArithmeticOperator basicArithmeticOperator){
         int expressionLength = expression.length();
         for (int i=1; i<expressionLength; i++){
-            if (expression.charAt(i) == arithmeticOperator.getSymbol()){
-                String newExpression = arithmeticOperator.evaluateOperator(expression, i);
-                return calculateOperations(newExpression, arithmeticOperator);
+            if (expression.charAt(i) == basicArithmeticOperator.getSymbol()){
+                String newExpression = basicArithmeticOperator.evaluate(expression, i);
+                return calculateOperations(newExpression, basicArithmeticOperator);
             }
         }
         return expression;
@@ -54,15 +54,15 @@ public class Computer {
     /*
         write summary comment here about same as above but two with same precedence
     */
-    private String calculateOperations(String expression, ArithmeticOperator arithmeticOperatorOne, ArithmeticOperator arithmeticOperatorTwo){
+    private String calculateOperations(String expression, BasicArithmeticOperator basicArithmeticOperatorOne, BasicArithmeticOperator basicArithmeticOperatorTwo){
         int expressionLength = expression.length();
         for (int i=1; i<expressionLength; i++){
-            if (expression.charAt(i) == arithmeticOperatorOne.getSymbol()){
-                String newExpression = arithmeticOperatorOne.evaluateOperator(expression, i);
-                return calculateOperations(newExpression, arithmeticOperatorOne, arithmeticOperatorTwo);
-            } else if (expression.charAt(i) == arithmeticOperatorTwo.getSymbol()) {
-                String newExpression = arithmeticOperatorTwo.evaluateOperator(expression, i);
-                return calculateOperations(newExpression, arithmeticOperatorOne, arithmeticOperatorTwo);
+            if (expression.charAt(i) == basicArithmeticOperatorOne.getSymbol()){
+                String newExpression = basicArithmeticOperatorOne.evaluate(expression, i);
+                return calculateOperations(newExpression, basicArithmeticOperatorOne, basicArithmeticOperatorTwo);
+            } else if (expression.charAt(i) == basicArithmeticOperatorTwo.getSymbol()) {
+                String newExpression = basicArithmeticOperatorTwo.evaluate(expression, i);
+                return calculateOperations(newExpression, basicArithmeticOperatorOne, basicArithmeticOperatorTwo);
             }
         }
         return expression;

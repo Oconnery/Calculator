@@ -5,7 +5,7 @@ import oisin.connery.exceptions.ExpressionFormatException;
 
 import java.math.BigDecimal;
 
-public class Exponent extends ArithmeticOperator {
+public class Exponent extends BasicArithmeticOperator {
 
     public Exponent() {
         super('^');

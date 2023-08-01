@@ -2,7 +2,7 @@ package oisin.connery.operators;
 
 import java.math.BigDecimal;
 
-public class Addition extends ArithmeticOperator {
+public class Addition extends BasicArithmeticOperator {
 
     public Addition() {
         super('+');

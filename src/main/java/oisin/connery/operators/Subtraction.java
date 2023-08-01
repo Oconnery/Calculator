@@ -2,7 +2,7 @@ package oisin.connery.operators;
 
 import java.math.BigDecimal;
 
-public class Subtraction extends ArithmeticOperator {
+public class Subtraction extends BasicArithmeticOperator {
 
     public Subtraction() {
         super('-');
