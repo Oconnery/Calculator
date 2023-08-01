@@ -5,6 +5,7 @@ import oisin.connery.NumberRetriever;
 import oisin.connery.structures.NumberAndIndexes;
 
 import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 
 @Getter
 public abstract class ArithmeticOperator {
@@ -25,21 +26,22 @@ public abstract class ArithmeticOperator {
             if (positionInExpression == expression.length()-1){
                 return expression;
             } else {
-                evaluateOperator(expression, positionInExpression);
+                return evaluateOperator(expression, positionInExpression);
             }
         }
         NumberAndIndexes leftNumberAndIndexes = NumberRetriever.getNumberLeftOfOperator(expression, positionInExpression, isNegativeNumber);
         NumberAndIndexes rightNumberAndIndexes = NumberRetriever.getNumberRightOfOperator(expression, positionInExpression, isNegativeNumber);
         BigDecimal result = calculate(leftNumberAndIndexes.getNumber(), rightNumberAndIndexes.getNumber());
-        StringBuilder stringBuilder = new StringBuilder(expression); // Can this length be improved to be more accurate?
+
+        StringBuilder stringBuilder = new StringBuilder(expression);
         stringBuilder.replace(leftNumberAndIndexes.getStartingIndex(), rightNumberAndIndexes.getEndingIndex() ,result.toPlainString());
         return stringBuilder.toString(); // StringBuilder code in it's own method?
     }
 
     private String dealWithMultipleAddsOrMinuses(String expression, int positionInExpression, char rightChar) {
-        boolean isNegativeNumber;
-        isNegativeNumber = mixOfAddsAndMinusesResultsInNegative(symbol, rightChar);
-        StringBuilder resolvePlusMinusBuilder = new StringBuilder(expression).deleteCharAt(positionInExpression +1);
+        boolean isNegativeNumber = mixOfAddsAndMinusesResultsInNegative(symbol, rightChar);
+        StringBuilder resolvePlusMinusBuilder = new StringBuilder(expression);
+        resolvePlusMinusBuilder.deleteCharAt(positionInExpression +1);
         resolvePlusMinusBuilder.setCharAt(positionInExpression, isNegativeNumber?'-':'+');
         return resolvePlusMinusBuilder.toString();
     }
@@ -49,9 +51,9 @@ public abstract class ArithmeticOperator {
             return secondChar == '-';
         } else if (firstChar == '-'){
             return secondChar != '-';
+        } else{
+            throw new InvalidParameterException("The characters: ".concat(String.valueOf(firstChar)).concat(" and ").concat(String.valueOf(secondChar)).concat(" are not + or - characters and have been passed to the wrong method."));
         }
-        // todo: else throw
-        return false;
     }
 
     // todo: look into String.indexOf methods
