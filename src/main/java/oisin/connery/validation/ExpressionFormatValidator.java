@@ -15,23 +15,23 @@ public class ExpressionFormatValidator {
         if (expression.isBlank()){
             throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_IS_EMPTY);
         }
-        if (!startsWithANumberOrParentheses(expression)){
+        if (!startsWithANumberOrParenthesesOrFactorial(expression)){
             throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_START_INCORRECT);
         }
-        if (!endsWithANumberOrParentheses(expression)){
+        if (!endsWithANumberOrParenthesesOrFactorial(expression)){
             throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_ENDING_INCORRECT);
         }
         throwExceptionOnIllegitimateText(expression);
     }
 
-    private static boolean startsWithANumberOrParentheses(String expression){
+    private static boolean startsWithANumberOrParenthesesOrFactorial(String expression){
         char firstChar = expression.charAt(0);
-        return firstChar == '(' || firstChar == plusAndMinusCharacters[0]||  firstChar == plusAndMinusCharacters[1]||firstChar >= '0' && firstChar<= '9';
+        return firstChar == '(' || firstChar == plusAndMinusCharacters[0] ||  firstChar == plusAndMinusCharacters[1] || firstChar >= '0' && firstChar<= '9' || firstChar == '!';
     }
 
-    private static boolean endsWithANumberOrParentheses(String expression){
+    private static boolean endsWithANumberOrParenthesesOrFactorial(String expression){
         char firstChar = expression.charAt(expression.length()-1);
-        return firstChar == ')' || firstChar >= '0' && firstChar<= '9';
+        return firstChar == ')' || firstChar >= '0' && firstChar<= '9' || firstChar == '!';
     }
 
     private static void throwExceptionOnIllegitimateText(String expression) throws ExpressionFormatException{
@@ -54,7 +54,7 @@ public class ExpressionFormatValidator {
             for (char charAllowedOnceInARowOnly: allowedCharactersOneInARowOnly) {
                 if (c == charAllowedOnceInARowOnly) {
                     if (lastCharWasOperator || lastCharWasPlusOrMinus){
-                        throw new ExpressionFormatException(ExceptionMessages.twoCharsInARowNotAllowed(c, charAllowedOnceInARowOnly, i));
+                        throw new ExpressionFormatException(ExceptionMessages.twoCharsInARowNotAllowed(c, i));
                     } else {
                         lastCharWasOperator = true;
                         continue outerloop;

@@ -1,6 +1,5 @@
 package oisin.connery.operators;
 
-import lombok.Getter;
 import oisin.connery.NumberRetriever;
 import oisin.connery.exceptions.ExceptionMessages;
 import oisin.connery.structures.NumberAndIndexes;
@@ -8,13 +7,10 @@ import oisin.connery.structures.NumberAndIndexes;
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 
-@Getter
-public abstract class BasicArithmeticOperator implements Operator{
-
-    private final char symbol;
+public abstract class BasicArithmeticOperator extends Operator{
 
     protected BasicArithmeticOperator(char symbol) {
-        this.symbol = symbol;
+        super(symbol);
     }
 
     @Override

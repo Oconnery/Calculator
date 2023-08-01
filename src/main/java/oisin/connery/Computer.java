@@ -6,6 +6,8 @@ import oisin.connery.structures.ExpressionAndIndex;
 import oisin.connery.validation.ExpressionFormatValidator;
 import org.apache.commons.lang3.StringUtils;
 
+// todo: Could store a Map<Map<>> cache of parentheses symbol location, addition symbol location etc. in validation
+//  pass and then just go there instead of looping through expression so many times.
 public class Computer {
     public String calculateExpression(String expression) throws ExpressionFormatException {
         expression = StringUtils.deleteWhitespace(expression);
@@ -34,35 +36,33 @@ public class Computer {
     }
 
     private String performArithmetic(String expression){
-        String postExponentExpression = calculateOperations(expression, new Exponent()); // these new() methods will be done multiple times for parentheses
+        String postFactorialExpression = calculateOperations(expression, new FactorialOperator());
+        String postExponentExpression = calculateOperations(postFactorialExpression, new Exponent());
         String postDivisionMultiplicationExpression = calculateOperations(postExponentExpression, new Division(), new Multiplication());
         return calculateOperations(postDivisionMultiplicationExpression, new Addition(), new Subtraction());
     }
 
     // summary comment
-    private String calculateOperations(String expression, BasicArithmeticOperator basicArithmeticOperator){
+    private String calculateOperations(String expression, Operator operator){
         int expressionLength = expression.length();
         for (int i=1; i<expressionLength; i++){
-            if (expression.charAt(i) == basicArithmeticOperator.getSymbol()){
-                String newExpression = basicArithmeticOperator.evaluate(expression, i);
-                return calculateOperations(newExpression, basicArithmeticOperator);
+            if (expression.charAt(i) == operator.getSymbol()){
+                String newExpression = operator.evaluate(expression, i);
+                return calculateOperations(newExpression, operator);
             }
         }
         return expression;
     }
 
-    /*
-        write summary comment here about same as above but two with same precedence
-    */
-    private String calculateOperations(String expression, BasicArithmeticOperator basicArithmeticOperatorOne, BasicArithmeticOperator basicArithmeticOperatorTwo){
+    private String calculateOperations(String expression, Operator operatorOne, Operator operatorTwo){
         int expressionLength = expression.length();
         for (int i=1; i<expressionLength; i++){
-            if (expression.charAt(i) == basicArithmeticOperatorOne.getSymbol()){
-                String newExpression = basicArithmeticOperatorOne.evaluate(expression, i);
-                return calculateOperations(newExpression, basicArithmeticOperatorOne, basicArithmeticOperatorTwo);
-            } else if (expression.charAt(i) == basicArithmeticOperatorTwo.getSymbol()) {
-                String newExpression = basicArithmeticOperatorTwo.evaluate(expression, i);
-                return calculateOperations(newExpression, basicArithmeticOperatorOne, basicArithmeticOperatorTwo);
+            if (expression.charAt(i) == operatorOne.getSymbol()){
+                String newExpression = operatorOne.evaluate(expression, i);
+                return calculateOperations(newExpression, operatorOne, operatorTwo);
+            } else if (expression.charAt(i) == operatorTwo.getSymbol()) {
+                String newExpression = operatorTwo.evaluate(expression, i);
+                return calculateOperations(newExpression, operatorOne, operatorTwo);
             }
         }
         return expression;

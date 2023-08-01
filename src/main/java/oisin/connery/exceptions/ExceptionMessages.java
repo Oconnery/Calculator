@@ -28,10 +28,9 @@ public class ExceptionMessages {
         throw new ExpressionFormatException("Expression contains a character which is not allowed: ".concat(String.valueOf(character)).concat(" at index position ").concat(String.valueOf(index)).concat(" in the formula"));
     }
 
-    public static String twoCharsInARowNotAllowed(char character, char characterTwo, int index) {
+    public static String twoCharsInARowNotAllowed(char character, int index) {
         throw new ExpressionFormatException("Expression has two operators in a row which are not allowed to be in a row: "
-                .concat(String.valueOf(character)).concat(" and ").concat(String.valueOf(characterTwo))
-                .concat(" at index positions of ").concat(String.valueOf(index - 1)).concat(" and ")
-                .concat(String.valueOf(index)).concat(" in the formula"));
+                .concat(String.valueOf(character)).concat(" at index position ").concat(String.valueOf(index))
+                .concat(String.valueOf(index)).concat(" in the expression"));
     }
 }

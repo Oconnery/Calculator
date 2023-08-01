@@ -11,7 +11,7 @@ public class Exponent extends BasicArithmeticOperator {
         super('^');
     }
 
-    public static final int MAX_PROCESSABLE_POWER_LENGTH = 10; // I didn't check this during validation because it would cost performance on every exponent call, and it is a very rare case. Instead, throw runtime exception.
+    public static final int MAX_PROCESSABLE_POWER_LENGTH = 10;
 
     @Override
     protected BigDecimal calculate(BigDecimal base, BigDecimal power) {
