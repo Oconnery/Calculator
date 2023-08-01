@@ -1,6 +1,7 @@
 package oisin.connery;
 
 import oisin.connery.exceptions.ExpressionFormatException;
+import oisin.connery.operators.Exponent;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -11,8 +12,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class ComputerTests { // extend a class (abstract or not) (static?) that just contains the provideInput methods and their implementations // called CalculateTestData or something. // or could just import it as static import and then reference it possibly. // ComputerTestBase?
-
+class ComputerTests {
     //todo: test nulls and empty value inputs
 
     @ParameterizedTest
@@ -80,7 +80,7 @@ class ComputerTests { // extend a class (abstract or not) (static?) that just co
     @MethodSource({"provideBadFormatInput"})
     @NullSource
     public void testCalculateThrowsExceptionOnBadFormatInput(String formula){
-        assertComputerThrowsErrorFromBadFormulas(formula);
+        assertComputerThrowsExpressionFormatExceptionFromBadFormulas(formula);
     }
 
     private void assertComputerCalculatesOutputFromFormula(String formula, String expectedOutput){
@@ -88,9 +88,13 @@ class ComputerTests { // extend a class (abstract or not) (static?) that just co
         assertEquals(expectedOutput, computer.calculateExpression(formula));
     }
 
-    private void assertComputerThrowsErrorFromBadFormulas(String formula){
+    private void assertComputerThrowsExpressionFormatExceptionFromBadFormulas(String formula){
         Computer computer = new Computer();
         assertThrows(ExpressionFormatException.class, ()-> computer.calculateExpression(formula));
+    }
+
+    private static String generateTooLargeExponentPowerNumber(){
+        return "10 ^ " + "9".repeat(Exponent.MAX_PROCESSABLE_POWER_LENGTH);
     }
 
     private static Stream<Arguments> provideAdditionsInput(){
@@ -145,7 +149,6 @@ class ComputerTests { // extend a class (abstract or not) (static?) that just co
                 Arguments.of("1 ^ 1", "1"),
                 Arguments.of("1 ^ 0", "1"),
                 Arguments.of("0 ^ 0", "1"),
-                //Arguments.of("0 ^ 2147483647", "0"),
                 Arguments.of("999999999 ^ 0", "1"),
                 Arguments.of("2147483647 ^ 0", "1"), // doesn't work now because max value is 999999999. I could always try catch arithmeticException in the exponent implementation and try math.pow after converting to primitives
                 Arguments.of("0 ^ 0", "1"),
@@ -240,7 +243,10 @@ class ComputerTests { // extend a class (abstract or not) (static?) that just co
                 Arguments.of("9+1b"),
                 Arguments.of("9+1b-9"),
                 Arguments.of("9$-1"),
-                Arguments.of("$4+1")
+                Arguments.of("$4+1"),
+
+                Arguments.of(generateTooLargeExponentPowerNumber()),
+                Arguments.of(generateTooLargeExponentPowerNumber().concat("9"))
         );
     }
 

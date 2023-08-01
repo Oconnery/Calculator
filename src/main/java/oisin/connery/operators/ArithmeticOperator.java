@@ -2,6 +2,7 @@ package oisin.connery.operators;
 
 import lombok.Getter;
 import oisin.connery.NumberRetriever;
+import oisin.connery.exceptions.ExceptionMessages;
 import oisin.connery.structures.NumberAndIndexes;
 
 import java.math.BigDecimal;
@@ -52,12 +53,12 @@ public abstract class ArithmeticOperator {
         } else if (firstChar == '-'){
             return secondChar != '-';
         } else{
-            throw new InvalidParameterException("The characters: ".concat(String.valueOf(firstChar)).concat(" and ").concat(String.valueOf(secondChar)).concat(" are not + or - characters and have been passed to the wrong method."));
+            throw new InvalidParameterException(ExceptionMessages.wrongCharacterOnAddMinusMethodCheck(firstChar, secondChar));
         }
     }
 
     // todo: look into String.indexOf methods
 
     // write a summary here
-    abstract BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber);
+    protected abstract BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber);
 }

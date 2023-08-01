@@ -9,7 +9,7 @@ public class Multiplication extends ArithmeticOperator{
     }
 
     @Override
-    BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber) {
+    protected BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber) {
         return leftNumber.multiply(rightNumber);
     }
 }
