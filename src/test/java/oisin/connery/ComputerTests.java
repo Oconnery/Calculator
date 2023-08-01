@@ -1,7 +1,7 @@
 package oisin.connery;
 
 import oisin.connery.exceptions.ExpressionFormatException;
-import oisin.connery.operators.Exponent;
+import oisin.connery.operators.ExponentOperator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -88,17 +88,15 @@ class ComputerTests {
     }
 
     private void assertComputerCalculatesOutputFromFormula(String formula, String expectedOutput){
-        Computer computer = new Computer();
-        assertEquals(expectedOutput, computer.calculateExpression(formula));
+        assertEquals(expectedOutput, Computer.calculate(formula));
     }
 
     private void assertComputerThrowsExpressionFormatExceptionFromBadFormulas(String formula){
-        Computer computer = new Computer();
-        assertThrows(ExpressionFormatException.class, ()-> computer.calculateExpression(formula));
+        assertThrows(ExpressionFormatException.class, ()-> Computer.calculate(formula));
     }
 
     private static String generateTooLargeExponentPowerNumber(){
-        return "10 ^ " + "9".repeat(Exponent.MAX_PROCESSABLE_POWER_LENGTH);
+        return "10 ^ " + "9".repeat(ExponentOperator.MAX_PROCESSABLE_POWER_LENGTH);
     }
 
     private static Stream<Arguments> provideAdditionsInput(){

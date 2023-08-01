@@ -2,10 +2,11 @@ package oisin.connery.operators;
 
 import java.math.BigDecimal;
 
-public class Multiplication extends BasicArithmeticOperator {
+public class MultiplicationOperator extends BasicArithmeticOperator {
 
-    public Multiplication() {
-        super('*');
+    @Override
+    public char getSymbol() {
+        return '*';
     }
 
     @Override
