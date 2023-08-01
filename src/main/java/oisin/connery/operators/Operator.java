@@ -4,11 +4,8 @@ import lombok.Getter;
 
 @Getter
 public abstract class Operator {
-    protected final char symbol;
 
-    public Operator(char symbol) {
-        this.symbol = symbol;
-    }
+    public abstract char getSymbol();
 
     public abstract String evaluate(String expression, int positionInExpression);
 }

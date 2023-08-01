@@ -5,13 +5,13 @@ import oisin.connery.exceptions.ExpressionFormatException;
 
 import java.math.BigDecimal;
 
-public class Exponent extends BasicArithmeticOperator {
-
-    public Exponent() {
-        super('^');
-    }
-
+public class ExponentOperator extends BasicArithmeticOperator {
     public static final int MAX_PROCESSABLE_POWER_LENGTH = 10;
+
+    @Override
+    public char getSymbol() {
+        return '^';
+    }
 
     @Override
     protected BigDecimal calculate(BigDecimal base, BigDecimal power) {

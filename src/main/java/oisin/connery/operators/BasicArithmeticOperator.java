@@ -9,10 +9,6 @@ import java.security.InvalidParameterException;
 
 public abstract class BasicArithmeticOperator extends Operator{
 
-    protected BasicArithmeticOperator(char symbol) {
-        super(symbol);
-    }
-
     @Override
     public String evaluate(String expression, int positionInExpression){
         char rightChar = expression.charAt(positionInExpression+1);
@@ -39,7 +35,7 @@ public abstract class BasicArithmeticOperator extends Operator{
     private String evaluateMultipleSignOperators(String expression, int positionInExpression, char rightChar) { // improve method name
         StringBuilder resolvePlusMinusBuilder = new StringBuilder(expression);
         resolvePlusMinusBuilder.deleteCharAt(positionInExpression +1);
-        resolvePlusMinusBuilder.setCharAt(positionInExpression, evaluateSigns(symbol, rightChar));
+        resolvePlusMinusBuilder.setCharAt(positionInExpression, evaluateSigns(getSymbol(), rightChar));
         return resolvePlusMinusBuilder.toString();
     }
 

@@ -3,10 +3,11 @@ package oisin.connery.operators;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
-public class Division extends BasicArithmeticOperator {
+public class DivisionOperator extends BasicArithmeticOperator {
 
-    public Division() {
-        super('/');
+    @Override
+    public char getSymbol() {
+        return '/';
     }
 
     @Override

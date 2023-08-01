@@ -6,8 +6,10 @@ import oisin.connery.structures.NumberAndIndexes;
 import java.math.BigDecimal;
 
 public class FactorialOperator extends Operator {
-    public FactorialOperator() {
-        super('!');
+
+    @Override
+    public char getSymbol() {
+        return '!';
     }
 
     @Override

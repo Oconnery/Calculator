@@ -2,10 +2,10 @@ package oisin.connery.operators;
 
 import java.math.BigDecimal;
 
-public class Subtraction extends BasicArithmeticOperator {
-
-    public Subtraction() {
-        super('-');
+public class SubtractionOperator extends BasicArithmeticOperator {
+    @Override
+    public char getSymbol() {
+        return '-';
     }
 
     @Override

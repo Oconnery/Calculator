@@ -2,10 +2,11 @@ package oisin.connery.operators;
 
 import java.math.BigDecimal;
 
-public class Addition extends BasicArithmeticOperator {
+public class AdditionOperator extends BasicArithmeticOperator {
 
-    public Addition() {
-        super('+');
+    @Override
+    public char getSymbol() { // todo: should these be a string or a Char?
+        return '+';
     }
 
     @Override
