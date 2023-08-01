@@ -41,14 +41,14 @@ public class ExpressionFormatValidator {
         int rightParenthesesCount = 0;
         int i =-1;
 
-        outerloop:
+        outer_loop:
         for (char c: expression.toCharArray()) {
             i++;
             for (char allowedChar: alwaysAllowedCharacters) {
                 if (c == allowedChar) {
                     lastCharWasOperator = false;
                     lastCharWasPlusOrMinus = false;
-                    continue outerloop;
+                    continue outer_loop;
                 }
             }
             for (char charAllowedOnceInARowOnly: allowedCharactersOneInARowOnly) {
@@ -57,7 +57,7 @@ public class ExpressionFormatValidator {
                         throw new ExpressionFormatException(ExceptionMessages.twoCharsInARowNotAllowed(c, i));
                     } else {
                         lastCharWasOperator = true;
-                        continue outerloop;
+                        continue outer_loop;
                     }
                 }
             }
@@ -65,21 +65,21 @@ public class ExpressionFormatValidator {
                 if (c == plusOrMinusChar) {
                     lastCharWasPlusOrMinus = true;
                     lastCharWasOperator = false;
-                    continue outerloop;
+                    continue outer_loop;
                 }
             }
             if (c == parenthesesCharacters[0]){
                 leftParenthesesCount++;
                 lastCharWasPlusOrMinus = false;
                 lastCharWasOperator = false;
-                continue outerloop;
+                continue outer_loop;
             } else if (c == parenthesesCharacters[1]){
                 rightParenthesesCount++;
                 lastCharWasPlusOrMinus = false;
                 lastCharWasOperator = false;
-                continue outerloop;
+                continue outer_loop;
             }
-            throw new ExpressionFormatException(ExceptionMessages.unallowedChar(c,i));
+            throw new ExpressionFormatException(ExceptionMessages.disallowedChar(c,i));
         }
         if (leftParenthesesCount!=rightParenthesesCount){
             throw new ExpressionFormatException(ExceptionMessages.unevenParenthesesNumber(leftParenthesesCount, rightParenthesesCount));

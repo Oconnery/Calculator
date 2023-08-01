@@ -88,13 +88,11 @@ class ComputerTests {
     }
 
     private void assertComputerCalculatesOutputFromFormula(String formula, String expectedOutput){
-        Computer computer = new Computer();
-        assertEquals(expectedOutput, computer.calculate(formula));
+        assertEquals(expectedOutput, Computer.calculate(formula));
     }
 
     private void assertComputerThrowsExpressionFormatExceptionFromBadFormulas(String formula){
-        Computer computer = new Computer();
-        assertThrows(ExpressionFormatException.class, ()-> computer.calculate(formula));
+        assertThrows(ExpressionFormatException.class, ()-> Computer.calculate(formula));
     }
 
     private static String generateTooLargeExponentPowerNumber(){

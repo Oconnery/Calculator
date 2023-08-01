@@ -24,7 +24,7 @@ public class ExceptionMessages {
         throw new ExpressionFormatException("Expression has an uneven number of left parentheses brackets: ".concat(String.valueOf(leftParenthesesCount)).concat(" and right parentheses brackets: ").concat(String.valueOf(rightParenthesesCount)));
     }
 
-    public static String unallowedChar(char character, int index) {
+    public static String disallowedChar(char character, int index) {
         throw new ExpressionFormatException("Expression contains a character which is not allowed: ".concat(String.valueOf(character)).concat(" at index position ").concat(String.valueOf(index)).concat(" in the formula"));
     }
 

@@ -29,7 +29,7 @@ public abstract class BasicArithmeticOperator extends Operator{
 
         StringBuilder stringBuilder = new StringBuilder(expression);
         stringBuilder.replace(leftNumberAndIndexes.getStartingIndex(), rightNumberAndIndexes.getEndingIndex() ,result.toPlainString());
-        return stringBuilder.toString(); // StringBuilder code in it's own method?
+        return stringBuilder.toString(); // StringBuilder code in its own method?
     }
 
     private String evaluateMultipleSignOperators(String expression, int positionInExpression, char rightChar) { // improve method name
