@@ -40,20 +40,19 @@ public class Computer {
     }
 
     private static String evaluateAllParentheses(String expression) {
-         int amountExpressionReducedBy = 0; // this works for parentheses because I know that all the remaining parentheses will be to the right of this one. Make the cache an ordered linkedList if I have to.
-        List<Integer> operatorLocationList = operatorLocationsCache.get(RIGHT_PARENTHESES); // so this should work for everything else too? I would have to provide them with the
+         int amountExpressionReducedBy = 0;
+        List<Integer> operatorLocationList = operatorLocationsCache.get(RIGHT_PARENTHESES);
         for (Integer index : operatorLocationList){
             int expressionLength = expression.length();
             index -= amountExpressionReducedBy;
             expression = evaluateParentheses(expression, index);
             amountExpressionReducedBy += (expressionLength-expression.length());
-            //operatorLocationList.remove(index);
         }
         return expression;
     }
 
     private static String evaluateParentheses(String expression, int index){
-        ExpressionAndIndex expressionInsideParentheses = ParenthesesFunctionality.extractSubExpressionFromExpression(expression, index);
+        ExpressionAndIndex expressionInsideParentheses = ParenthesesFunctionality.extractSubExpression(expression, index);
         String expressionWithResolvedParentheses = performArithmetic(expressionInsideParentheses.getExpression());
         StringBuilder expressionWithResolvedParenthesesSb = new StringBuilder(expression);
         expressionWithResolvedParenthesesSb.replace(expressionInsideParentheses.getLeftSymbolIndex(), index+1, expressionWithResolvedParentheses);
@@ -67,35 +66,15 @@ public class Computer {
         return calculateOperations(postDivisionMultiplication, additionOperator, subtractionOperator);
     }
 
-    // summary comment
-    private static String calculateOperations(String expression, Operator operator){
+    private static String calculateOperations(String expression, Operator operator) {
         int expressionLength = expression.length();
-        for (int i=1; i<expressionLength; i++){
-            if (expression.charAt(i) == operator.getSymbol()){
+        for (int i = 1; i < expressionLength; i++) {
+            if (expression.charAt(i) == operator.getSymbol()) {
                 String newExpression = operator.evaluate(expression, i);
                 return calculateOperations(newExpression, operator);
             }
         }
         return expression;
-
-//        int amountExpressionReducedBy = 0;
-//        List<Integer> operatorLocationList = operatorLocationsCache.get(characterToOperatorType.get(operator.getSymbol()));
-//        for (Integer index : operatorLocationList) {
-//                int expressionLength = expression.length();
-//                // if (index < expressionLength+amountExpressionReducedBy) { // causing other problems. investigate // second pass is a problem because the
-//                //index -= amountExpressionReducedBy;
-//                if (isInRange(index, expStartIndex, expEndIndex)){
-//                    expression = operator.evaluate(expression, index);
-//                    operatorLocationList.remove(index);
-//
-//                    // update expStartIndex and expEndIndex
-//                }
-//        }
-//        return expression;
-    }
-
-    private static boolean isInRange(int number, int start, int end){
-        return number >= start && number <= end;
     }
 
     private static String calculateOperations(String expression , Operator operatorOne, Operator operatorTwo){

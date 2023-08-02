@@ -6,7 +6,7 @@ import oisin.connery.exceptions.ExpressionFormatException;
 import oisin.connery.structures.ExpressionAndIndex;
 
 @Getter
-public class ParenthesesFunctionality { // Could I make this static
+public class ParenthesesFunctionality {
     public static final char OPENING_SYMBOL;
     public static final char CLOSING_SYMBOL;
 
@@ -15,7 +15,7 @@ public class ParenthesesFunctionality { // Could I make this static
         CLOSING_SYMBOL =')';
     }
 
-    public static ExpressionAndIndex extractSubExpressionFromExpression(String expression, int closingSymbolIndex){ // bad name?
+    public static ExpressionAndIndex extractSubExpression(String expression, int closingSymbolIndex){
         int openingSymbolIndex = findOpeningSymbolIndex(expression, closingSymbolIndex);
         String parenthesesExpression = expression.substring(openingSymbolIndex+1, closingSymbolIndex);
         return new ExpressionAndIndex(parenthesesExpression, openingSymbolIndex);
