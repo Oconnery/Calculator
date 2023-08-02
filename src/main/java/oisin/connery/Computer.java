@@ -5,11 +5,13 @@ import oisin.connery.operators.*;
 import oisin.connery.structures.ExpressionAndIndex;
 import oisin.connery.validation.ExpressionFormatValidator;
 import org.apache.commons.lang3.StringUtils;
-import org.javatuples.Pair;
 import java.util.List;
 import java.util.Map;
 
+import static oisin.connery.operators.OperatorTypes.RIGHT_PARENTHESES;
+
 public class Computer {
+    private static Map<OperatorTypes,List<Integer>> operatorLocationsCache;
     private static final AdditionOperator additionOperator;
     private static final SubtractionOperator subtractionOperator;
     private static final DivisionOperator divisionOperator;
@@ -28,40 +30,41 @@ public class Computer {
 
     public static String calculate(String expression) throws ExpressionFormatException {
         expression = StringUtils.deleteWhitespace(expression);
-        Map<OperatorType, List<Integer>> operatorLocationsCache = ExpressionFormatValidator.validate(expression);
-        return performCalculations(expression, operatorLocationsCache);
+        operatorLocationsCache = ExpressionFormatValidator.validate(expression);
+        return performCalculations(expression);
     }
 
-    private static String performCalculations(String expression, Map<OperatorType, List<Integer>> operatorLocationsCache){
-        String postParenthesesExpression = evaluateAllParentheses(expression, operatorLocationsCache);
-        return performArithmetic(postParenthesesExpression);
+    private static String performCalculations(String expression){
+        expression = evaluateAllParentheses(expression);
+        return performArithmetic(expression);
     }
 
-    private static String evaluateAllParentheses(String expression, Map<OperatorType,List<Integer>> operatorLocationsCache) {
-        int amountExpressionReducedBy =0;
-        for (Integer index : operatorLocationsCache.get(OperatorType.RIGHT_PARENTHESES)){
+    private static String evaluateAllParentheses(String expression) {
+         int amountExpressionReducedBy = 0; // this works for parentheses because I know that all the remaining parentheses will be to the right of this one. Make the cache an ordered linkedList if I have to.
+        List<Integer> operatorLocationList = operatorLocationsCache.get(RIGHT_PARENTHESES); // so this should work for everything else too? I would have to provide them with the
+        for (Integer index : operatorLocationList){
+            int expressionLength = expression.length();
             index -= amountExpressionReducedBy;
-            Pair<String, Integer> newExpressionAndNewIndex = evaluateParentheses(expression, index);
-            expression = newExpressionAndNewIndex.getValue0();
-            amountExpressionReducedBy += newExpressionAndNewIndex.getValue1();
+            expression = evaluateParentheses(expression, index);
+            amountExpressionReducedBy += (expressionLength-expression.length());
+            //operatorLocationList.remove(index);
         }
         return expression;
     }
 
-    private static Pair<String, Integer> evaluateParentheses(String expression, int index){
+    private static String evaluateParentheses(String expression, int index){
         ExpressionAndIndex expressionInsideParentheses = ParenthesesFunctionality.extractSubExpressionFromExpression(expression, index);
-        String resolvedExpressionInsideParentheses = performArithmetic(expressionInsideParentheses.getExpression());
-        StringBuilder parenthesesResolvedStringBuilder = new StringBuilder(expression);
-        parenthesesResolvedStringBuilder.replace(expressionInsideParentheses.getLeftSymbolIndex(), index+1, resolvedExpressionInsideParentheses);
-        int expressionLengthChange = expression.length() - parenthesesResolvedStringBuilder.length();
-        return Pair.with(parenthesesResolvedStringBuilder.toString(), expressionLengthChange);
+        String expressionWithResolvedParentheses = performArithmetic(expressionInsideParentheses.getExpression());
+        StringBuilder expressionWithResolvedParenthesesSb = new StringBuilder(expression);
+        expressionWithResolvedParenthesesSb.replace(expressionInsideParentheses.getLeftSymbolIndex(), index+1, expressionWithResolvedParentheses);
+        return expressionWithResolvedParenthesesSb.toString();
     }
 
     private static String performArithmetic(String expression){
         String postFactorialExpression = calculateOperations(expression, factorialOperator);
         String postExponentExpression = calculateOperations(postFactorialExpression, exponentOperator);
-        String postDivisionMultiplicationExpression = calculateOperations(postExponentExpression, divisionOperator, multiplicationOperator);
-        return calculateOperations(postDivisionMultiplicationExpression, additionOperator, subtractionOperator);
+        String postDivisionMultiplication = calculateOperations(postExponentExpression, divisionOperator, multiplicationOperator);
+        return calculateOperations(postDivisionMultiplication, additionOperator, subtractionOperator);
     }
 
     // summary comment
@@ -74,17 +77,37 @@ public class Computer {
             }
         }
         return expression;
+
+//        int amountExpressionReducedBy = 0;
+//        List<Integer> operatorLocationList = operatorLocationsCache.get(characterToOperatorType.get(operator.getSymbol()));
+//        for (Integer index : operatorLocationList) {
+//                int expressionLength = expression.length();
+//                // if (index < expressionLength+amountExpressionReducedBy) { // causing other problems. investigate // second pass is a problem because the
+//                //index -= amountExpressionReducedBy;
+//                if (isInRange(index, expStartIndex, expEndIndex)){
+//                    expression = operator.evaluate(expression, index);
+//                    operatorLocationList.remove(index);
+//
+//                    // update expStartIndex and expEndIndex
+//                }
+//        }
+//        return expression;
     }
 
-    private static String calculateOperations(String expression, Operator operatorOne, Operator operatorTwo){
+    private static boolean isInRange(int number, int start, int end){
+        return number >= start && number <= end;
+    }
+
+    private static String calculateOperations(String expression , Operator operatorOne, Operator operatorTwo){
+        // combine the two
         int expressionLength = expression.length();
         for (int i=1; i<expressionLength; i++){
             if (expression.charAt(i) == operatorOne.getSymbol()){
-                String newExpression = operatorOne.evaluate(expression, i);
-                return calculateOperations(newExpression, operatorOne, operatorTwo);
+                expression = operatorOne.evaluate(expression, i);
+                return calculateOperations(expression, operatorOne, operatorTwo);
             } else if (expression.charAt(i) == operatorTwo.getSymbol()) {
-                String newExpression = operatorTwo.evaluate(expression, i);
-                return calculateOperations(newExpression, operatorOne, operatorTwo);
+                expression = operatorTwo.evaluate(expression, i);
+                return calculateOperations(expression, operatorOne, operatorTwo);
             }
         }
         return expression;
