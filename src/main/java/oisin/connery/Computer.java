@@ -8,10 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Map;
 
-import static oisin.connery.operators.OperatorTypes.RIGHT_PARENTHESES;
+import static oisin.connery.operators.SymbolTypes.RIGHT_PARENTHESES;
 
 public class Computer {
-    private static Map<OperatorTypes,List<Integer>> operatorLocationsCache;
+    private static Map<SymbolTypes,List<Integer>> operatorLocationsCache;
     private static final AdditionOperator additionOperator;
     private static final SubtractionOperator subtractionOperator;
     private static final DivisionOperator divisionOperator;

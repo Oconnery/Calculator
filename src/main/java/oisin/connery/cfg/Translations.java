@@ -1,21 +1,21 @@
 package oisin.connery.cfg;
 
-import oisin.connery.operators.OperatorTypes;
+import oisin.connery.operators.SymbolTypes;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Translations {
-    public static final Map<Character, OperatorTypes> characterToOperatorType;
+    public static final Map<Character, SymbolTypes> characterToOperatorType;
 
     static {
-        characterToOperatorType = new HashMap<>(); // todo: put into config file
-        characterToOperatorType.put('*', OperatorTypes.MULTIPLICATION);
-        characterToOperatorType.put('/', OperatorTypes.DIVISION);
-        characterToOperatorType.put('^', OperatorTypes.EXPONENT);
-        characterToOperatorType.put('!', OperatorTypes.FACTORIAL);
-        characterToOperatorType.put('+', OperatorTypes.ADDITION);
-        characterToOperatorType.put('-', OperatorTypes.SUBTRACTION);
-        characterToOperatorType.put(')', OperatorTypes.RIGHT_PARENTHESES);
+        characterToOperatorType = new HashMap<>();
+        characterToOperatorType.put('*', SymbolTypes.MULTIPLICATION);
+        characterToOperatorType.put('/', SymbolTypes.DIVISION);
+        characterToOperatorType.put('^', SymbolTypes.EXPONENT);
+        characterToOperatorType.put('!', SymbolTypes.FACTORIAL);
+        characterToOperatorType.put('+', SymbolTypes.ADDITION);
+        characterToOperatorType.put('-', SymbolTypes.SUBTRACTION);
+        characterToOperatorType.put(')', SymbolTypes.RIGHT_PARENTHESES);
     }
 }

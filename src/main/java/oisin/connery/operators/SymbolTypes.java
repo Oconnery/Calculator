@@ -1,6 +1,6 @@
 package oisin.connery.operators;
 
-public enum OperatorTypes { // todo: better name?
+public enum SymbolTypes {
     ADDITION,
     SUBTRACTION,
     MULTIPLICATION,

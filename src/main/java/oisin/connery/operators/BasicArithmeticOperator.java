@@ -53,7 +53,5 @@ public abstract class BasicArithmeticOperator extends Operator{
         }
     }
 
-    // todo: look into String.indexOf methods
-    // write a summary here
     protected abstract BigDecimal calculate(BigDecimal leftNumber, BigDecimal rightNumber);
 }
