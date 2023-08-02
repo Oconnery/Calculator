@@ -5,42 +5,56 @@ import oisin.connery.operators.*;
 import oisin.connery.structures.ExpressionAndIndex;
 import oisin.connery.validation.ExpressionFormatValidator;
 import org.apache.commons.lang3.StringUtils;
+import org.javatuples.Pair;
+import java.util.List;
+import java.util.Map;
 
-// todo: Could store a Map<Map<>> cache of parentheses symbol location, addition symbol location etc. in validation
-//  pass and then just go there instead of looping through expression so many times.
 public class Computer {
-    //Map<OperatorType, List<String>> operatorLocationsMap;
-    // References are static.
-    private static final AdditionOperator additionOperator = new AdditionOperator();
-    private static final SubtractionOperator subtractionOperator = new SubtractionOperator();
-    private static final DivisionOperator divisionOperator = new DivisionOperator();
-    private static final MultiplicationOperator multiplicationOperator = new MultiplicationOperator();
-    private static final FactorialOperator factorialOperator = new FactorialOperator();
-    private static final ExponentOperator exponentOperator = new ExponentOperator();
+    private static final AdditionOperator additionOperator;
+    private static final SubtractionOperator subtractionOperator;
+    private static final DivisionOperator divisionOperator;
+    private static final MultiplicationOperator multiplicationOperator;
+    private static final FactorialOperator factorialOperator;
+    private static final ExponentOperator exponentOperator;
+
+    static {
+        additionOperator = new AdditionOperator();
+        subtractionOperator = new SubtractionOperator();
+        divisionOperator = new DivisionOperator();
+        multiplicationOperator = new MultiplicationOperator();
+        factorialOperator = new FactorialOperator();
+        exponentOperator = new ExponentOperator();
+    }
 
     public static String calculate(String expression) throws ExpressionFormatException {
         expression = StringUtils.deleteWhitespace(expression);
-        ExpressionFormatValidator.validate(expression);
-        return performCalculations(expression);
+        Map<OperatorType, List<Integer>> operatorLocationsCache = ExpressionFormatValidator.validate(expression);
+        return performCalculations(expression, operatorLocationsCache);
     }
 
-    private static String performCalculations(String expression){
-        String postParenthesesExpression = evaluateAllParentheses(expression);
+    private static String performCalculations(String expression, Map<OperatorType, List<Integer>> operatorLocationsCache){
+        String postParenthesesExpression = evaluateAllParentheses(expression, operatorLocationsCache);
         return performArithmetic(postParenthesesExpression);
     }
 
-    private static String evaluateAllParentheses(String expression){
-        int expressionLength = expression.length();
-        for (int i=1; i<expressionLength; i++){
-            if (expression.charAt(i) == ParenthesesFunctionality.CLOSING_SYMBOL){
-                ExpressionAndIndex expressionInsideParentheses = ParenthesesFunctionality.extractSubExpressionFromExpression(expression, i);
-                String resolvedExpressionInsideParentheses = performArithmetic(expressionInsideParentheses.getExpression());
-                StringBuilder stringBuilder = new StringBuilder(expression);
-                stringBuilder.replace(expressionInsideParentheses.getLeftSymbolIndex(), i+1, resolvedExpressionInsideParentheses);
-                return evaluateAllParentheses(stringBuilder.toString());
-            }
+    private static String evaluateAllParentheses(String expression, Map<OperatorType,List<Integer>> operatorLocationsCache) {
+        int amountExpressionReducedBy =0;
+        for (Integer index : operatorLocationsCache.get(OperatorType.RIGHT_PARENTHESES)){
+            index -= amountExpressionReducedBy;
+            Pair<String, Integer> newExpressionAndNewIndex = evaluateParentheses(expression, index);
+            expression = newExpressionAndNewIndex.getValue0();
+            amountExpressionReducedBy += newExpressionAndNewIndex.getValue1();
         }
         return expression;
+    }
+
+    private static Pair<String, Integer> evaluateParentheses(String expression, int index){
+        ExpressionAndIndex expressionInsideParentheses = ParenthesesFunctionality.extractSubExpressionFromExpression(expression, index);
+        String resolvedExpressionInsideParentheses = performArithmetic(expressionInsideParentheses.getExpression());
+        StringBuilder parenthesesResolvedStringBuilder = new StringBuilder(expression);
+        parenthesesResolvedStringBuilder.replace(expressionInsideParentheses.getLeftSymbolIndex(), index+1, resolvedExpressionInsideParentheses);
+        int expressionLengthChange = expression.length() - parenthesesResolvedStringBuilder.length();
+        return Pair.with(parenthesesResolvedStringBuilder.toString(), expressionLengthChange);
     }
 
     private static String performArithmetic(String expression){

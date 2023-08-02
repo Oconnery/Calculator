@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class ComputerTests {
+class ComputerTests { // todo: write tests for undefined results
     @ParameterizedTest
     @MethodSource({"provideAdditionsInput"})
     public void testCalculateReturnsCorrectAnswerOnAdditionsInput(String formula, String expectedOutput){
