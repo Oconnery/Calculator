@@ -87,12 +87,21 @@ class ComputerTests { // todo: write tests for undefined results
         assertComputerThrowsExpressionFormatExceptionFromBadFormulas(formula);
     }
 
+    @ParameterizedTest
+    @MethodSource({"provideUndefinedNumbersInput"})
+    public void testCalculateThrowsExceptionOnUndefinedFormatInput(String formula){
+        assertComputerThrowsArithmeticNumberExceptionFromBadUndefinedFormula(formula);
+    }
+
     private void assertComputerCalculatesOutputFromFormula(String formula, String expectedOutput){
         assertEquals(expectedOutput, Computer.calculate(formula));
     }
 
     private void assertComputerThrowsExpressionFormatExceptionFromBadFormulas(String formula){
         assertThrows(ExpressionFormatException.class, ()-> Computer.calculate(formula));
+    }
+    private void assertComputerThrowsArithmeticNumberExceptionFromBadUndefinedFormula(String formula){
+        assertThrows(ArithmeticException.class, ()-> Computer.calculate(formula));
     }
 
     private static String generateTooLargeExponentPowerNumber(){
@@ -275,5 +284,12 @@ class ComputerTests { // todo: write tests for undefined results
                 Arguments.of("12!", "479001600"),
                 Arguments.of("2!+2!", "4"),
                 Arguments.of("2!-2!-6!", "-720"));
+    }
+
+    private static Stream<Arguments> provideUndefinedNumbersInput(){
+        return Stream.of(
+                Arguments.of("36/0"),
+                Arguments.of("3/0"),
+                Arguments.of("99999999/0"));
     }
 }
