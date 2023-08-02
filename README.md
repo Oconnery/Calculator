@@ -17,6 +17,6 @@ To run, simply open up intellij or another Java IDE and either run the tests in 
 
 Please note that the program uses validation so only valid input is allowed.
 
-# Future possible improvements:
+# Future possible improvements
   - Use cache for operators and not just the parentheses. Don't use for loops here.
   - Use as a library in another program.
