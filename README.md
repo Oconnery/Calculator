@@ -11,9 +11,12 @@ Currently allowed inputs:
   - Exponents:  ^
   - Parentheses: ( )
 
+# How to run
+
 To run, simply open up intellij or another Java IDE and either run the tests in ComputerTests for predefined equations or alternaitvely run the main method in the main class and provide a custom expression for the calculator to calculate. After running, type in the expression and hit enter. The calculator will print back the answer.
 
 Please note that the program uses validation so only valid input is allowed.
 
-Future possible work for improvements:
+# Future possible improvements:
   - Use cache for operators and not just the parentheses. Don't use for loops here.
+  - Use as a library in another program.
