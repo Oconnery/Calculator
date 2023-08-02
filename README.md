@@ -20,3 +20,4 @@ Please note that the program uses validation so only valid input is allowed.
 # Future possible improvements
   - Use cache for operators and not just the parentheses. Don't use for loops here.
   - Use as a library in another program.
+  - Accept decimal place for output as a parameter in the main calculate method.
