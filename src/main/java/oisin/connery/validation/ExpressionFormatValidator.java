@@ -14,7 +14,14 @@ public class ExpressionFormatValidator {
     private static final char [] plusAndMinusCharacters = {'+', '-'};
     private static final char [] parenthesesCharacters = {'(', ')'};
 
-    public static EnumMap<SymbolTypes, List<Integer>> validate(String expression) throws ExpressionFormatException {
+    /**
+     * Validates the formatting of the given expression.
+     * Creates and returns a cache of the operators in the given expression.
+     * @param expression
+     * @return operator cache
+     * @throws ExpressionFormatException Expression must be formatted correctly.
+     */
+    public static EnumMap<SymbolTypes, List<Integer>> validateExpressionAndCreateOperatorCache(String expression) throws ExpressionFormatException {
         if (expression == null)
             throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_IS_NULL);
         if (expression.isBlank()){
@@ -26,7 +33,7 @@ public class ExpressionFormatValidator {
         if (!endsWithANumberOrParenthesesOrFactorial(expression)){
             throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_ENDING_INCORRECT);
         }
-        return cacheOperatorsInExpression(expression);
+        return cacheOperatorsInExpressionAndValidateLegitimacy(expression);
     }
 
     private static boolean startsWithANumberOrParenthesesOrFactorial(String expression){
@@ -39,7 +46,7 @@ public class ExpressionFormatValidator {
         return firstChar == ')' || firstChar >= '0' && firstChar<= '9' || firstChar == '!';
     }
 
-    private static EnumMap<SymbolTypes, List<Integer>> cacheOperatorsInExpression(String expression) throws ExpressionFormatException{
+    private static EnumMap<SymbolTypes, List<Integer>> cacheOperatorsInExpressionAndValidateLegitimacy(String expression) throws ExpressionFormatException{
         EnumMap<SymbolTypes, List<Integer>> operatorLocationsCache = new EnumMap<>(SymbolTypes.class);
 
         for (SymbolTypes symbolTypes : SymbolTypes.values()) {

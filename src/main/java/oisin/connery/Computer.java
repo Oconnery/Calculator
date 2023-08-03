@@ -28,9 +28,19 @@ public class Computer {
         exponentOperator = new ExponentOperator();
     }
 
+    /**
+     * Calculates the given expression using FBODMAS rules.
+     * Precedence:
+     *  1: Factorials.
+     *  2: Brackets.
+     *  3: Order/exponents.
+     *  4: Division, Multiplication.
+     *  5: Addition, Subtraction.
+     * @return answer
+     */
     public static String calculate(String expression) throws ExpressionFormatException {
         expression = StringUtils.deleteWhitespace(expression);
-        operatorLocationsCache = ExpressionFormatValidator.validate(expression);
+        operatorLocationsCache = ExpressionFormatValidator.validateExpressionAndCreateOperatorCache(expression);
         return performCalculations(expression);
     }
 
@@ -59,6 +69,7 @@ public class Computer {
         return expressionWithResolvedParenthesesSb.toString();
     }
 
+
     private static String performArithmetic(String expression){
         String postFactorialExpression = calculateOperations(expression, factorialOperator);
         String postExponentExpression = calculateOperations(postFactorialExpression, exponentOperator);
@@ -66,6 +77,10 @@ public class Computer {
         return calculateOperations(postDivisionMultiplication, additionOperator, subtractionOperator);
     }
 
+    /**
+     * Calculates the operation supplied throughout a given expression from left to right.
+     * @return postCalculationExpression
+     */
     private static String calculateOperations(String expression, Operator operator) {
         int expressionLength = expression.length();
         for (int i = 1; i < expressionLength; i++) {
@@ -77,6 +92,10 @@ public class Computer {
         return expression;
     }
 
+    /**
+     * Calculates the operations supplied for a given expression with the same precedence from left to right.
+     * @return postCalculationExpression
+     */
     private static String calculateOperations(String expression , Operator operatorOne, Operator operatorTwo){
         // combine the two
         int expressionLength = expression.length();
