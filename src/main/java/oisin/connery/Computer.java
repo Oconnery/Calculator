@@ -11,7 +11,7 @@ import java.util.Map;
 import static oisin.connery.operators.SymbolTypes.RIGHT_PARENTHESES;
 
 public class Computer {
-    private static Map<SymbolTypes,List<Integer>> operatorLocationsCache;
+    private static Map<SymbolTypes,List<Integer>> operatorIndexLocationsCache;
     private static final AdditionOperator additionOperator;
     private static final SubtractionOperator subtractionOperator;
     private static final DivisionOperator divisionOperator;
@@ -40,7 +40,7 @@ public class Computer {
      */
     public static String calculate(String expression) throws ExpressionFormatException {
         expression = StringUtils.deleteWhitespace(expression);
-        operatorLocationsCache = ExpressionFormatValidator.validateExpressionAndCreateOperatorCache(expression);
+        operatorIndexLocationsCache = ExpressionFormatValidator.validateExpressionAndCreateOperatorCache(expression);
         return performCalculations(expression);
     }
 
@@ -51,7 +51,7 @@ public class Computer {
 
     private static String evaluateAllParentheses(String expression) {
          int amountExpressionReducedBy = 0;
-        List<Integer> operatorLocationList = operatorLocationsCache.get(RIGHT_PARENTHESES);
+        List<Integer> operatorLocationList = operatorIndexLocationsCache.get(RIGHT_PARENTHESES);
         for (Integer index : operatorLocationList){
             int expressionLength = expression.length();
             index -= amountExpressionReducedBy;
