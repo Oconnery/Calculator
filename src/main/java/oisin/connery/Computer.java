@@ -52,10 +52,10 @@ public class Computer {
     private static String evaluateAllParentheses(String expression) {
         int amountExpressionReducedBy = 0;
         List<Integer> operatorIndexesInExpression = operatorIndexLocationsCache.get(RIGHT_PARENTHESES);
-        for (Integer index : operatorIndexesInExpression){
+        for (Integer parenthesesEndIndex : operatorIndexesInExpression){
             int expressionLength = expression.length();
-            index -= amountExpressionReducedBy;
-            expression = evaluateParentheses(expression, index);
+            parenthesesEndIndex -= amountExpressionReducedBy;
+            expression = evaluateParentheses(expression, parenthesesEndIndex);
             amountExpressionReducedBy += (expressionLength-expression.length());
         }
         return expression;
