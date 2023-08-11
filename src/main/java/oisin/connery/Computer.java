@@ -50,9 +50,9 @@ public class Computer {
     }
 
     private static String evaluateAllParentheses(String expression) {
-         int amountExpressionReducedBy = 0;
-        List<Integer> operatorLocationList = operatorIndexLocationsCache.get(RIGHT_PARENTHESES);
-        for (Integer index : operatorLocationList){
+        int amountExpressionReducedBy = 0;
+        List<Integer> operatorIndexesInExpression = operatorIndexLocationsCache.get(RIGHT_PARENTHESES);
+        for (Integer index : operatorIndexesInExpression){
             int expressionLength = expression.length();
             index -= amountExpressionReducedBy;
             expression = evaluateParentheses(expression, index);
@@ -68,7 +68,6 @@ public class Computer {
         expressionWithResolvedParenthesesSb.replace(expressionInsideParentheses.getLeftSymbolIndex(), index+1, expressionWithResolvedParentheses);
         return expressionWithResolvedParenthesesSb.toString();
     }
-
 
     private static String performArithmetic(String expression){
         String postFactorialExpression = calculateOperations(expression, factorialOperator);
