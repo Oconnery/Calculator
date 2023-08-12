@@ -4,26 +4,25 @@ import lombok.Getter;
 import oisin.connery.exceptions.ExceptionMessages;
 import oisin.connery.exceptions.ExpressionFormatException;
 import oisin.connery.structures.ExpressionAndIndex;
+import oisin.connery.symbols.DualSymbols;
+import oisin.connery.symbols.SymbolType;
 
 @Getter
-public class ParenthesesFunctionality {
-    public static final char OPENING_SYMBOL;
-    public static final char CLOSING_SYMBOL;
+public class ParenthesesFunctionality extends DualSymbols {
 
-    static{
-        OPENING_SYMBOL = '(';
-        CLOSING_SYMBOL =')';
+    public ParenthesesFunctionality() {
+        super(SymbolType.LEFT_PARENTHESES.symbol, SymbolType.LEFT_PARENTHESES, SymbolType.RIGHT_PARENTHESES.symbol, SymbolType.RIGHT_PARENTHESES);
     }
 
-    public static ExpressionAndIndex extractSubExpression(String expression, int closingSymbolIndex){
+    public ExpressionAndIndex extractSubExpression(String expression, int closingSymbolIndex){
         int openingSymbolIndex = findOpeningSymbolIndex(expression, closingSymbolIndex);
         String parenthesesExpression = expression.substring(openingSymbolIndex+1, closingSymbolIndex);
         return new ExpressionAndIndex(parenthesesExpression, openingSymbolIndex);
     }
 
-    private static int findOpeningSymbolIndex(String expression, int closingSymbolIndex){
+    private int findOpeningSymbolIndex(String expression, int closingSymbolIndex){
         for (int i=closingSymbolIndex; i>=0; i--){
-            if (expression.charAt(i) == OPENING_SYMBOL)
+            if (expression.charAt(i) == firstSymbol)
                 return i;
         }
         throw new ExpressionFormatException(ExceptionMessages.closingBracketHasNoOpeningBracket(closingSymbolIndex));
