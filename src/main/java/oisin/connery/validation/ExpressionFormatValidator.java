@@ -2,11 +2,11 @@ package oisin.connery.validation;
 
 import oisin.connery.exceptions.ExceptionMessages;
 import oisin.connery.exceptions.ExpressionFormatException;
-import oisin.connery.operators.SymbolTypes;
+import oisin.connery.symbols.SymbolType;
 
 import java.util.*;
 
-import static oisin.connery.cfg.Translations.characterToOperatorType;
+import static oisin.connery.symbols.SymbolType.characterToSymbolType;
 
 public class ExpressionFormatValidator {
     private static final char [] alwaysAllowedCharacters = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
@@ -21,7 +21,7 @@ public class ExpressionFormatValidator {
      * @return operator cache
      * @throws ExpressionFormatException Expression must be formatted correctly.
      */
-    public static EnumMap<SymbolTypes, List<Integer>> validateExpressionAndCreateOperatorCache(String expression) throws ExpressionFormatException {
+    public static EnumMap<SymbolType, List<Integer>> validateExpressionAndCreateOperatorCache(String expression) throws ExpressionFormatException {
         if (expression == null)
             throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_IS_NULL);
         if (expression.isBlank()){
@@ -46,11 +46,11 @@ public class ExpressionFormatValidator {
         return firstChar == ')' || firstChar >= '0' && firstChar<= '9' || firstChar == '!';
     }
 
-    private static EnumMap<SymbolTypes, List<Integer>> cacheOperatorsInExpressionAndValidateLegitimacy(String expression) throws ExpressionFormatException{
-        EnumMap<SymbolTypes, List<Integer>> operatorLocationsCache = new EnumMap<>(SymbolTypes.class);
+    private static EnumMap<SymbolType, List<Integer>> cacheOperatorsInExpressionAndValidateLegitimacy(String expression) throws ExpressionFormatException{
+        EnumMap<SymbolType, List<Integer>> operatorLocationsCache = new EnumMap<>(SymbolType.class);
 
-        for (SymbolTypes symbolTypes : SymbolTypes.values()) {
-            operatorLocationsCache.put(symbolTypes, new ArrayList<>());
+        for (SymbolType symbolType : SymbolType.values()) {
+            operatorLocationsCache.put(symbolType, new ArrayList<>());
         }
 
         boolean lastCharWasOperator = false;
@@ -71,7 +71,7 @@ public class ExpressionFormatValidator {
             }
             for (char charAllowedOnceInARowOnly: allowedCharactersOneInARowOnly) {
                 if (c == charAllowedOnceInARowOnly) {
-                    if (characterToOperatorType.containsKey(c))
+                    if (characterToSymbolType.containsKey(c))
                         ifOperatorThenAddToCache(operatorLocationsCache, c, i);
                     if (lastCharWasOperator || lastCharWasPlusOrMinus){
                         throw new ExpressionFormatException(ExceptionMessages.twoCharsInARowNotAllowed(c, i));
@@ -109,12 +109,12 @@ public class ExpressionFormatValidator {
         return operatorLocationsCache;
     }
 
-    private static void ifOperatorThenAddToCache(EnumMap<SymbolTypes, List<Integer>> operatorLocationsCache, char c, int indexToAdd){
-        if (characterToOperatorType.containsKey(c))
-            operatorLocationsCache.get(characterToOperatorType.get(c)).add(indexToAdd);
+    private static void ifOperatorThenAddToCache(EnumMap<SymbolType, List<Integer>> operatorLocationsCache, char c, int indexToAdd){
+        if (characterToSymbolType.containsKey(c))
+            operatorLocationsCache.get(characterToSymbolType.get(c)).add(indexToAdd);
     }
 
-    private static void addOperatorToCache(EnumMap<SymbolTypes, List<Integer>> operatorLocationsCache, char c, int indexToAdd){
-        operatorLocationsCache.get(characterToOperatorType.get(c)).add(indexToAdd);
+    private static void addOperatorToCache(EnumMap<SymbolType, List<Integer>> operatorLocationsCache, char c, int indexToAdd){
+        operatorLocationsCache.get(characterToSymbolType.get(c)).add(indexToAdd);
     }
 }

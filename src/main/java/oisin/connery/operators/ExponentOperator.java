@@ -2,15 +2,15 @@ package oisin.connery.operators;
 
 import oisin.connery.exceptions.ExceptionMessages;
 import oisin.connery.exceptions.ExpressionFormatException;
+import oisin.connery.symbols.SymbolType;
 
 import java.math.BigDecimal;
 
 public class ExponentOperator extends BasicArithmeticOperator {
     public static final int MAX_PROCESSABLE_POWER_LENGTH = 10;
 
-    @Override
-    public char getSymbol() {
-        return '^';
+    public ExponentOperator() {
+        super(SymbolType.EXPONENT.symbol, SymbolType.EXPONENT);
     }
 
     @Override

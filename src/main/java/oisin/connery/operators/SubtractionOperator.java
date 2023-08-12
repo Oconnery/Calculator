@@ -1,11 +1,13 @@
 package oisin.connery.operators;
 
+import oisin.connery.symbols.SymbolType;
+
 import java.math.BigDecimal;
 
 public class SubtractionOperator extends BasicArithmeticOperator {
-    @Override
-    public char getSymbol() {
-        return '-';
+
+    public SubtractionOperator() {
+        super(SymbolType.SUBTRACTION.symbol, SymbolType.SUBTRACTION);
     }
 
     @Override

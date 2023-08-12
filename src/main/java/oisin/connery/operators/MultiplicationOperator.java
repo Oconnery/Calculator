@@ -1,12 +1,13 @@
 package oisin.connery.operators;
 
+import oisin.connery.symbols.SymbolType;
+
 import java.math.BigDecimal;
 
 public class MultiplicationOperator extends BasicArithmeticOperator {
 
-    @Override
-    public char getSymbol() {
-        return '*';
+    public MultiplicationOperator() {
+        super(SymbolType.MULTIPLICATION.symbol, SymbolType.MULTIPLICATION);
     }
 
     @Override
