@@ -6,12 +6,12 @@ import oisin.connery.symbols.SymbolType;
 
 import java.util.*;
 
-import static oisin.connery.symbols.SymbolType.characterToSymbolType;
+import static oisin.connery.symbols.SymbolType.operatorCharacterToSymbolType;
 
 public class ExpressionFormatValidator {
-    private static final char [] alwaysAllowedCharacters = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    private static final char [] allowedCharactersOneInARowOnly = {'.','*', '/', '^', 'E', '!'};
-    private static final char [] plusAndMinusCharacters = {'+', '-'};
+    private static final Set<Character> alwaysAllowedCharacters = new HashSet<>(Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'));
+    private static final Set<Character> allowedCharactersOnceInARowOnly = new HashSet<>(Arrays.asList('.','*', '/', '^', 'E', '!'));
+    private static final char[] plusAndMinusCharacters = {'+', '-'};
     private static final char [] parenthesesCharacters = {'(', ')'};
 
     /**
@@ -27,23 +27,23 @@ public class ExpressionFormatValidator {
         if (expression.isBlank()){
             throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_IS_EMPTY);
         }
-        if (!startsWithANumberOrParenthesesOrFactorial(expression)){
+        if (!startsWithValidNumber(expression)){
             throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_START_INCORRECT);
         }
-        if (!endsWithANumberOrParenthesesOrFactorial(expression)){
+        if (!endsWithValidNumber(expression)){
             throw new ExpressionFormatException(ExceptionMessages.EXPRESSION_ENDING_INCORRECT);
         }
         return cacheOperatorsInExpressionAndValidateLegitimacy(expression);
     }
 
-    private static boolean startsWithANumberOrParenthesesOrFactorial(String expression){
+    private static boolean startsWithValidNumber(String expression){
         char firstChar = expression.charAt(0);
         return firstChar == '(' || firstChar == plusAndMinusCharacters[0] ||  firstChar == plusAndMinusCharacters[1] || firstChar >= '0' && firstChar<= '9' || firstChar == '!';
     }
 
-    private static boolean endsWithANumberOrParenthesesOrFactorial(String expression){
-        char firstChar = expression.charAt(expression.length()-1);
-        return firstChar == ')' || firstChar >= '0' && firstChar<= '9' || firstChar == '!';
+    private static boolean endsWithValidNumber(String expression){
+        char lastChar = expression.charAt(expression.length()-1);
+        return lastChar == ')' || lastChar >= '0' && lastChar<= '9' || lastChar == '!';
     }
 
     private static EnumMap<SymbolType, List<Integer>> cacheOperatorsInExpressionAndValidateLegitimacy(String expression) throws ExpressionFormatException{
@@ -59,47 +59,39 @@ public class ExpressionFormatValidator {
         int rightParenthesesCount = 0;
         int i =-1;
 
-        outer_loop:
         for (char c: expression.toCharArray()) {
             i++;
-            for (char allowedChar: alwaysAllowedCharacters) {
-                if (c == allowedChar) {
+            if (alwaysAllowedCharacters.contains(c)) {
                     lastCharWasOperator = false;
                     lastCharWasPlusOrMinus = false;
-                    continue outer_loop;
+                    continue;
+            }
+            if (allowedCharactersOnceInARowOnly.contains(c)) {
+                ifOperatorThenAddToCache(operatorLocationsCache, c, i);
+                if (lastCharWasOperator || lastCharWasPlusOrMinus){
+                    throw new ExpressionFormatException(ExceptionMessages.twoCharsInARowNotAllowed(c, i));
+                } else {
+                    lastCharWasOperator = true;
+                    continue;
                 }
             }
-            for (char charAllowedOnceInARowOnly: allowedCharactersOneInARowOnly) {
-                if (c == charAllowedOnceInARowOnly) {
-                    if (characterToSymbolType.containsKey(c))
-                        ifOperatorThenAddToCache(operatorLocationsCache, c, i);
-                    if (lastCharWasOperator || lastCharWasPlusOrMinus){
-                        throw new ExpressionFormatException(ExceptionMessages.twoCharsInARowNotAllowed(c, i));
-                    } else {
-                        lastCharWasOperator = true;
-                        continue outer_loop;
-                    }
-                }
+            if (plusAndMinusCharacters[0]==(c) || plusAndMinusCharacters[1]==c){
+                addOperatorToCache(operatorLocationsCache, c, i);
+                lastCharWasPlusOrMinus = true;
+                lastCharWasOperator = false;
+                continue;
             }
-            for (char plusOrMinusChar: plusAndMinusCharacters){
-                if (c == plusOrMinusChar) {
-                    addOperatorToCache(operatorLocationsCache, c, i);
-                    lastCharWasPlusOrMinus = true;
-                    lastCharWasOperator = false;
-                    continue outer_loop;
-                }
-            }
-            if (c == parenthesesCharacters[0]){
+            if (parenthesesCharacters[0]==(c)){
                 leftParenthesesCount++;
                 lastCharWasPlusOrMinus = false;
                 lastCharWasOperator = false;
-                continue outer_loop;
-            } else if (c == parenthesesCharacters[1]){
+                continue;
+            } else if (parenthesesCharacters[1]==(c)){
                 addOperatorToCache(operatorLocationsCache, c, i);
                 rightParenthesesCount++;
                 lastCharWasPlusOrMinus = false;
                 lastCharWasOperator = false;
-                continue outer_loop;
+                continue;
             }
             throw new ExpressionFormatException(ExceptionMessages.disallowedChar(c,i));
         }
@@ -110,11 +102,11 @@ public class ExpressionFormatValidator {
     }
 
     private static void ifOperatorThenAddToCache(EnumMap<SymbolType, List<Integer>> operatorLocationsCache, char c, int indexToAdd){
-        if (characterToSymbolType.containsKey(c))
-            operatorLocationsCache.get(characterToSymbolType.get(c)).add(indexToAdd);
+        if (operatorCharacterToSymbolType.containsKey(c))
+            operatorLocationsCache.get(operatorCharacterToSymbolType.get(c)).add(indexToAdd);
     }
 
     private static void addOperatorToCache(EnumMap<SymbolType, List<Integer>> operatorLocationsCache, char c, int indexToAdd){
-        operatorLocationsCache.get(characterToSymbolType.get(c)).add(indexToAdd);
+        operatorLocationsCache.get(operatorCharacterToSymbolType.get(c)).add(indexToAdd);
     }
 }
