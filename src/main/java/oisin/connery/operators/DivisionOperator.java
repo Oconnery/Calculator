@@ -1,13 +1,14 @@
 package oisin.connery.operators;
 
+import oisin.connery.symbols.SymbolType;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 
 public class DivisionOperator extends BasicArithmeticOperator {
 
-    @Override
-    public char getSymbol() {
-        return '/';
+    public DivisionOperator() {
+        super(SymbolType.DIVISION.symbol, SymbolType.DIVISION);
     }
 
     @Override

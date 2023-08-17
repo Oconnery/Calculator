@@ -2,14 +2,14 @@ package oisin.connery.operators;
 
 import oisin.connery.NumberRetriever;
 import oisin.connery.structures.NumberAndIndexes;
+import oisin.connery.symbols.SymbolType;
 
 import java.math.BigDecimal;
 
 public class FactorialOperator extends Operator {
 
-    @Override
-    public char getSymbol() {
-        return '!';
+    public FactorialOperator() {
+        super(SymbolType.FACTORIAL.symbol, SymbolType.FACTORIAL);
     }
 
     @Override

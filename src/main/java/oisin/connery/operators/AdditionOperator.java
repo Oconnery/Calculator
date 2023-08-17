@@ -1,12 +1,13 @@
 package oisin.connery.operators;
 
+import oisin.connery.symbols.SymbolType;
+
 import java.math.BigDecimal;
 
 public class AdditionOperator extends BasicArithmeticOperator {
 
-    @Override
-    public char getSymbol() {
-        return '+';
+    public AdditionOperator() {
+        super(SymbolType.ADDITION.symbol, SymbolType.ADDITION);
     }
 
     @Override

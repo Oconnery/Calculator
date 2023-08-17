@@ -3,21 +3,23 @@ package oisin.connery;
 import oisin.connery.exceptions.ExpressionFormatException;
 import oisin.connery.operators.*;
 import oisin.connery.structures.ExpressionAndIndex;
+import oisin.connery.symbols.SymbolType;
 import oisin.connery.validation.ExpressionFormatValidator;
 import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Map;
 
-import static oisin.connery.operators.SymbolTypes.RIGHT_PARENTHESES;
+import static oisin.connery.symbols.SymbolType.RIGHT_PARENTHESES;
 
 public class Computer {
-    private static Map<SymbolTypes,List<Integer>> operatorLocationsCache;
+    private static Map<SymbolType,List<Integer>> operatorIndexLocationsCache;
     private static final AdditionOperator additionOperator;
     private static final SubtractionOperator subtractionOperator;
     private static final DivisionOperator divisionOperator;
     private static final MultiplicationOperator multiplicationOperator;
     private static final FactorialOperator factorialOperator;
     private static final ExponentOperator exponentOperator;
+    private static final ParenthesesFunctionality parenthesesFunctionality;
 
     static {
         additionOperator = new AdditionOperator();
@@ -26,6 +28,7 @@ public class Computer {
         multiplicationOperator = new MultiplicationOperator();
         factorialOperator = new FactorialOperator();
         exponentOperator = new ExponentOperator();
+        parenthesesFunctionality = new ParenthesesFunctionality();
     }
 
     /**
@@ -40,7 +43,7 @@ public class Computer {
      */
     public static String calculate(String expression) throws ExpressionFormatException {
         expression = StringUtils.deleteWhitespace(expression);
-        operatorLocationsCache = ExpressionFormatValidator.validateExpressionAndCreateOperatorCache(expression);
+        operatorIndexLocationsCache = ExpressionFormatValidator.validateExpressionAndCreateOperatorCache(expression);
         return performCalculations(expression);
     }
 
@@ -50,25 +53,24 @@ public class Computer {
     }
 
     private static String evaluateAllParentheses(String expression) {
-         int amountExpressionReducedBy = 0;
-        List<Integer> operatorLocationList = operatorLocationsCache.get(RIGHT_PARENTHESES);
-        for (Integer index : operatorLocationList){
+        int amountExpressionReducedBy = 0;
+        List<Integer> operatorIndexesInExpression = operatorIndexLocationsCache.get(RIGHT_PARENTHESES);
+        for (Integer parenthesesEndIndex : operatorIndexesInExpression){
             int expressionLength = expression.length();
-            index -= amountExpressionReducedBy;
-            expression = evaluateParentheses(expression, index);
+            parenthesesEndIndex -= amountExpressionReducedBy;
+            expression = evaluateParentheses(expression, parenthesesEndIndex);
             amountExpressionReducedBy += (expressionLength-expression.length());
         }
         return expression;
     }
 
     private static String evaluateParentheses(String expression, int index){
-        ExpressionAndIndex expressionInsideParentheses = ParenthesesFunctionality.extractSubExpression(expression, index);
+        ExpressionAndIndex expressionInsideParentheses = parenthesesFunctionality.extractSubExpression(expression, index);
         String expressionWithResolvedParentheses = performArithmetic(expressionInsideParentheses.getExpression());
         StringBuilder expressionWithResolvedParenthesesSb = new StringBuilder(expression);
         expressionWithResolvedParenthesesSb.replace(expressionInsideParentheses.getLeftSymbolIndex(), index+1, expressionWithResolvedParentheses);
         return expressionWithResolvedParenthesesSb.toString();
     }
-
 
     private static String performArithmetic(String expression){
         String postFactorialExpression = calculateOperations(expression, factorialOperator);

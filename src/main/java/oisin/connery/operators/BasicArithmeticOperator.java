@@ -3,11 +3,16 @@ package oisin.connery.operators;
 import oisin.connery.NumberRetriever;
 import oisin.connery.exceptions.ExceptionMessages;
 import oisin.connery.structures.NumberAndIndexes;
+import oisin.connery.symbols.SymbolType;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 
 public abstract class BasicArithmeticOperator extends Operator{
+
+    public BasicArithmeticOperator(char symbol, SymbolType symbolType) {
+        super(symbol, symbolType);
+    }
 
     @Override
     public String evaluate(String expression, int positionInExpression){
@@ -35,7 +40,7 @@ public abstract class BasicArithmeticOperator extends Operator{
     private String evaluateMultipleSignOperators(String expression, int positionInExpression, char rightChar) { // improve method name
         StringBuilder resolvePlusMinusBuilder = new StringBuilder(expression);
         resolvePlusMinusBuilder.deleteCharAt(positionInExpression +1);
-        resolvePlusMinusBuilder.setCharAt(positionInExpression, evaluateSigns(getSymbol(), rightChar));
+        resolvePlusMinusBuilder.setCharAt(positionInExpression, evaluateSigns(symbol, rightChar));
         return resolvePlusMinusBuilder.toString();
     }
 

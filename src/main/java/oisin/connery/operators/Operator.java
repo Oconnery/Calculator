@@ -1,11 +1,14 @@
 package oisin.connery.operators;
 
-import lombok.Getter;
+import oisin.connery.symbols.Symbol;
+import oisin.connery.symbols.SymbolType;
 
-@Getter
-public abstract class Operator {
 
-    public abstract char getSymbol();
+public abstract class Operator extends Symbol {
+
+    public Operator(char symbol, SymbolType symbolType) {
+        super(symbol, symbolType);
+    }
 
     public abstract String evaluate(String expression, int positionInExpression);
 }
