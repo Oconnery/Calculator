@@ -14,17 +14,17 @@ public enum SymbolType {
     RIGHT_PARENTHESES(')');
 
     public final char symbol;
-    public static final Map<Character, SymbolType> characterToSymbolType;
+    public static final Map<Character, SymbolType> operatorCharacterToSymbolType;
 
     static {
-        characterToSymbolType = new HashMap<>();
-        characterToSymbolType.put(SymbolType.MULTIPLICATION.symbol, SymbolType.MULTIPLICATION);
-        characterToSymbolType.put(SymbolType.DIVISION.symbol, SymbolType.DIVISION);
-        characterToSymbolType.put(SymbolType.EXPONENT.symbol, SymbolType.EXPONENT);
-        characterToSymbolType.put(SymbolType.FACTORIAL.symbol, SymbolType.FACTORIAL);
-        characterToSymbolType.put(SymbolType.ADDITION.symbol, SymbolType.ADDITION);
-        characterToSymbolType.put(SymbolType.SUBTRACTION.symbol, SymbolType.SUBTRACTION);
-        characterToSymbolType.put(SymbolType.RIGHT_PARENTHESES.symbol, SymbolType.RIGHT_PARENTHESES);
+        operatorCharacterToSymbolType = new HashMap<>();
+        operatorCharacterToSymbolType.put(SymbolType.MULTIPLICATION.symbol, SymbolType.MULTIPLICATION);
+        operatorCharacterToSymbolType.put(SymbolType.DIVISION.symbol, SymbolType.DIVISION);
+        operatorCharacterToSymbolType.put(SymbolType.EXPONENT.symbol, SymbolType.EXPONENT);
+        operatorCharacterToSymbolType.put(SymbolType.FACTORIAL.symbol, SymbolType.FACTORIAL);
+        operatorCharacterToSymbolType.put(SymbolType.ADDITION.symbol, SymbolType.ADDITION);
+        operatorCharacterToSymbolType.put(SymbolType.SUBTRACTION.symbol, SymbolType.SUBTRACTION);
+        operatorCharacterToSymbolType.put(SymbolType.RIGHT_PARENTHESES.symbol, SymbolType.RIGHT_PARENTHESES);
     }
 
     SymbolType(char symbol) {

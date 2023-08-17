@@ -201,7 +201,10 @@ class ComputerTests {
 
                 Arguments.of("(3 * 3) ^ (4 * 1)", "6561"),
 
-                Arguments.of("(5!) - (6! -10)", "-590"));
+                Arguments.of("(5!) - (6! -10)", "-590"),
+
+                Arguments.of("(3!) + 7 + 4 * ((5*(6-4))+0-10)", "13")
+        );
     }
 
     private static Stream<Arguments> provideDecimalsInput(){
