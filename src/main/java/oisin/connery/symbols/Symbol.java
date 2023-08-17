@@ -1,14 +1,11 @@
 package oisin.connery.symbols;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public abstract class Symbol {
-    public Symbol(char symbol, SymbolType symbolType) {
-        this.symbol = symbol;
-        this.symbolType = symbolType;
-    }
-
     protected char symbol;
     protected SymbolType symbolType;
 }
