@@ -72,11 +72,12 @@ public class Computer {
         return expressionWithResolvedParenthesesSb.toString();
     }
 
+    // TODO: Should skip these if the map doesn't have any of that operator type. E.g. if operatorIndexLocationsCache.Get(SymbolType.EXPONENT).length == 0, then dont bother with calculateOperations(postFactorialExpression, exponentOperator)
     private static String performArithmetic(String expression){
         String postFactorialExpression = calculateOperations(expression, factorialOperator);
         String postExponentExpression = calculateOperations(postFactorialExpression, exponentOperator);
-        String postDivisionMultiplication = calculateOperations(postExponentExpression, divisionOperator, multiplicationOperator);
-        return calculateOperations(postDivisionMultiplication, additionOperator, subtractionOperator);
+        String postDivisionMultiplicationExpression = calculateOperations(postExponentExpression, divisionOperator, multiplicationOperator);
+        return calculateOperations(postDivisionMultiplicationExpression, additionOperator, subtractionOperator);
     }
 
     /**
