@@ -1,6 +1,6 @@
 # Calculator
 
-Caclulator is a program that takes in an expresssion and calcualtes the expression into a result in number format.
+Caclulator is a program that takes in an expression and calculates the expression into a result in number format.
 
 Currently allowed inputs:
   - Addition: +
